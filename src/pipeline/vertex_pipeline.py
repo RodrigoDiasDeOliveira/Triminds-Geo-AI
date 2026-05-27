@@ -1,37 +1,27 @@
 from google.cloud import aiplatform
 
-from src.utils.config_loader import load_yaml
 
+class VertexPipeline:
 
-class VertexAIPipeline:
+    def __init__(self, project_id, region):
 
-    def __init__(self, config_path):
-
-        self.config = load_yaml(config_path)
+        self.project_id = project_id
+        self.region = region
 
         aiplatform.init(
-            project=self.config["project_id"],
-            location=self.config["region"]
+            project=project_id,
+            location=region
         )
 
-    def submit_training_job(
-        self,
-        display_name,
-        container_uri,
-        model_serving_container_image_uri
-    ):
+    def create_pipeline_job(self, display_name, pipeline_root, template_path):
 
-        job = aiplatform.CustomContainerTrainingJob(
+        job = aiplatform.PipelineJob(
             display_name=display_name,
-            container_uri=container_uri,
-            model_serving_container_image_uri=(
-                model_serving_container_image_uri
-            )
+            template_path=template_path,
+            pipeline_root=pipeline_root,
+            enable_caching=False
         )
 
-        model = job.run(
-            replica_count=1,
-            machine_type="n1-standard-4"
-        )
+        job.run()
 
-        return model
+        return job
