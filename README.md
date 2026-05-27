@@ -37,21 +37,118 @@ This project leverages modern computer vision techniques to identify different t
 
 ### Project Structure
 
-```bash
 satellite-land-classification/
-├── data/                    # Raw and processed datasets
-├── notebooks/               # Exploratory analysis and experiments
+│
+├── data/
+│   ├── raw/
+│   ├── processed/
+│   ├── interim/
+│   ├── external/
+│   └── samples/
+│
+├── notebooks/
+│   ├── exploratory/
+│   ├── feature_engineering/
+│   └── experiments/
+│
 ├── src/
-│   ├── data_loader/         # Data loading and preprocessing
-│   ├── models/              # Model architectures (CNN, ViT, Hybrid)
-│   ├── training/            # Training scripts and configurations
-│   ├── evaluation/          # Metrics and inference
-│   └── utils/               # Helper functions
-├── gcp/                     # GCP and Spark configurations
+│   ├── data_loader/
+│   │   ├── __init__.py
+│   │   ├── dataset.py
+│   │   ├── preprocessing.py
+│   │   ├── augmentations.py
+│   │   └── geospatial_utils.py
+│   │
+│   ├── models/
+│   │   ├── __init__.py
+│   │   ├── cnn/
+│   │   │   ├── __init__.py
+│   │   │   ├── resnet_model.py
+│   │   │   └── efficientnet_model.py
+│   │   │
+│   │   ├── vit/
+│   │   │   ├── __init__.py
+│   │   │   ├── vit_model.py
+│   │   │   └── swin_transformer.py
+│   │   │
+│   │   ├── hybrid/
+│   │   │   ├── __init__.py
+│   │   │   └── cnn_transformer_hybrid.py
+│   │   │
+│   │   └── model_factory.py
+│   │
+│   ├── training/
+│   │   ├── __init__.py
+│   │   ├── trainer.py
+│   │   ├── distributed_training.py
+│   │   ├── callbacks.py
+│   │   └── losses.py
+│   │
+│   ├── evaluation/
+│   │   ├── __init__.py
+│   │   ├── metrics.py
+│   │   ├── confusion_matrix.py
+│   │   ├── inference.py
+│   │   └── explainability.py
+│   │
+│   ├── pipelines/
+│   │   ├── __init__.py
+│   │   ├── preprocessing_pipeline.py
+│   │   ├── training_pipeline.py
+│   │   └── vertex_pipeline.py
+│   │
+│   ├── deployment/
+│   │   ├── api/
+│   │   │   └── main.py
+│   │   └── vertex_endpoint/
+│   │
+│   └── utils/
+│       ├── __init__.py
+│       ├── logger.py
+│       ├── config_loader.py
+│       ├── seed.py
+│       └── storage.py
+│
+├── config/
+│   ├── dataset.yaml
+│   ├── model.yaml
+│   ├── training.yaml
+│   └── gcp.yaml
+│
+├── gcp/
 │   ├── dataproc/
-│   └── vertex_pipelines/
-├── config/                  # YAML configuration files
-├── experiments/             # Experiment tracking
+│   ├── vertex_ai/
+│   ├── terraform/
+│   └── bigquery/
+│
+├── experiments/
+│   ├── mlflow/
+│   └── tensorboard/
+│
+├── tests/
+│   ├── unit/
+│   ├── integration/
+│   └── performance/
+│
+├── scripts/
+│   ├── train.sh
+│   ├── evaluate.sh
+│   └── deploy.sh
+│
+├── docs/
+│   ├── architecture/
+│   ├── diagrams/
+│   └── api/
+│
+├── .github/
+│   └── workflows/
+│       └── ci.yml
+│
 ├── requirements.txt
 ├── Dockerfile
-└── README.md
+├── docker-compose.yml
+├── Makefile
+├── pyproject.toml
+├── README.md
+├── LICENSE
+└── .gitignore
