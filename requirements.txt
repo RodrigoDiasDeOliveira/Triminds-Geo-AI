@@ -40,3 +40,4 @@ pytest
 black
 flake8
 albumentations
+timm
