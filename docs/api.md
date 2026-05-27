@@ -1,20 +1,22 @@
-
-
-# 🌐 API Documentation — Satellite Land Classification
+# 🌐 API — Satellite Land Classification
 
 ## 📌 Overview
 
-This API exposes satellite image classification models via REST interface using FastAPI.
+REST API for satellite image classification using deep learning models.
+
+Built with FastAPI and integrated with MLflow-trained models.
 
 ---
 
-## 🚀 Base URL
+# 🚀 Base URL
+
+
 http://localhost:8000
 
 
 ---
 
-## 📤 Endpoints
+# 📤 ENDPOINTS
 
 ---
 
@@ -26,11 +28,9 @@ Classifies a satellite image.
 
 - Content-Type: multipart/form-data
 
-### Parameters
-
 | Field | Type | Description |
 |------|------|-------------|
-| file | image | Satellite image file (RGB) |
+| file | image | Satellite image (RGB) |
 
 ---
 
@@ -38,28 +38,27 @@ Classifies a satellite image.
 
 ```json
 {
-  "prediction": 3
+  "prediction": 2
 }
-Example
-curl -X POST "http://localhost:8000/predict" \
--F "file=@image.jpg"
-🔹 Health Check
-GET /health
+🔹 GET /health
+
+Returns API health status.
+
 {
   "status": "ok"
 }
-🧠 Model Information
-Default model: ResNet50
-Input size: 224x224
-Classes: 10 land cover types
-
-🧩 Future API Extensions
+🔹 Future Endpoints
 /predict_batch → batch inference
-/explain → Grad-CAM visualization
-/drift → monitoring endpoint
-/model/version → registry access
-/metrics → Prometheus integration
+/explain → model explainability (Grad-CAM)
+/drift → monitoring integration
+/metrics → performance stats
+/model/version → registry info
 
-🔐 Authentication (Future)
-API Key-based auth
-OAuth2 integration for enterprise deployment
+🧠 MODEL DETAILS
+Architecture: ResNet50 / ViT / Hybrid CNN-Transformer
+Input size: 224x224
+Output: Multi-class land classification
+
+🔐 AUTH (FUTURE)
+API Key authentication
+OAuth2 for enterprise deployments

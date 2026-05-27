@@ -1,66 +1,117 @@
-# 🧠 Satellite Land Classification — Architecture Design
+# 🛰️ Satellite Land Classification Platform
 
-## 📌 Overview
+## 🧠 Overview
 
-This project is a cloud-native machine learning platform for satellite image classification, designed with scalability, modularity, and production readiness in mind.
+A cloud-native machine learning platform for satellite image classification focused on:
 
-It integrates:
+- Land use classification
+- Precision agriculture
+- Remote sensing analytics
+- Scalable geospatial AI pipelines
 
-- Deep Learning (CNN + Vision Transformers)
-- Geospatial Processing
-- MLOps lifecycle management
-- Distributed computing
-- Cloud deployment on Google Cloud Platform
+Built with PyTorch and deployed on Google Cloud Platform.
 
 ---
 
- High-Level Architecture(its suppose to be!)
+# 🏗️ System Architecture
 
-The system is divided into four major layers:
+The system is divided into 5 core layers:
 
- 1. Core Machine Learning Layer
-Responsible for model training and inference.
+---
+
+## 1. DATA LAYER
+
+Responsible for ingestion and preprocessing.
 
 - data_loader/
-- models/
-- training/
-- evaluation/
+- preprocessing pipelines
+- geospatial utilities
 
 ---
 
- 2. MLOps Layer
-Responsible for lifecycle management.
+## 2. MODEL LAYER
 
-- mlops/tracking (MLflow)
-- mlops/registry
-- mlops/orchestration (Dataproc)
-- mlops/logging
-- mlops/experiments
+Responsible for deep learning models.
 
----
-
- 3. Monitoring Layer
-Responsible for production observability.
-
-- monitoring/data_drift
-- monitoring/model_drift
-- monitoring/performance
-- monitoring/drift_monitor
+- CNN (ResNet, EfficientNet)
+- Vision Transformers (ViT, Swin)
+- Hybrid CNN + Transformer models
 
 ---
 
- 4. Cloud Infrastructure Layer
+## 3. PIPELINE LAYER (ML ORCHESTRATION)
 
-Built on Google Cloud Platform:
+Responsible for end-to-end ML workflows.
 
-- Vertex AI for training & deployment
-- Dataproc for distributed processing
-- Cloud Storage for datasets
-- BigQuery GIS for geospatial analytics
+- preprocessing_pipeline.py
+- training_pipeline.py
+- inference_pipeline.py
+- vertex_pipeline.py
 
 ---
 
- 🔄 System Workflow
+## 4. MLOps LAYER
+
+Handles lifecycle of models.
+
+- MLflow tracking
+- Model registry
+- Experiment tracking
+- Logging system
+- Dataproc orchestration
+
+Location:
+
+
+src/mlops/
+
+
+---
+
+## 5. MONITORING LAYER
+
+Production observability system:
+
+- Data drift detection
+- Model drift detection
+- Performance monitoring
+- Drift aggregation system
+
+Location:
+
+
+src/monitoring/
+
+
+---
+
+## 6. CLOUD INFRASTRUCTURE (GCP)
+
+Full cloud stack:
+
+### Dataproc (Distributed Processing)
+- Spark jobs for large-scale preprocessing
+
+### Vertex AI
+- Training pipelines
+- Model deployment endpoints
+
+### BigQuery GIS
+- Geospatial analytics
+- Satellite metadata queries
+
+### Terraform
+- Infrastructure as code provisioning
+
+Location:
+
+
+gcp/
+
+
+---
+
+# 🔄 SYSTEM FLOW
 
 ```text
 Satellite Images
@@ -69,34 +120,40 @@ Data Ingestion (GeoTIFF / Raster)
       ↓
 Preprocessing Pipeline
       ↓
-Model Training (CNN / ViT / Hybrid)
+Dataset Loader
+      ↓
+Training Pipeline
       ↓
 MLflow Tracking
       ↓
 Model Registry
       ↓
-Deployment (FastAPI / Vertex AI Endpoint)
+Vertex AI Deployment
       ↓
-Monitoring (Drift + Performance)
+Monitoring Layer
       ↓
-Auto-Retraining Trigger (Dataproc / Vertex AI Pipelines)
-
-🧩 Design Principles
-Modular architecture (plug-and-play models)
+Auto Retraining (Dataproc + Vertex AI Pipelines)
+🧩 DESIGN PRINCIPLES
+Modular architecture
+Separation of concerns (ML / MLOps / Monitoring / Infra)
 Cloud-native design
-Reproducible experiments
-Separation of concerns (ML / MLOps / Monitoring)
+Reproducibility of experiments
 Horizontal scalability
-Observability-first design
+Production-first mindset
 
-📈 Scalability Strategy
-Batch processing via Dataproc Spark jobs
-Distributed training support (future DDP)
-Vertex AI managed pipelines
-Containerized inference services (Docker + Kubernetes-ready)
+☁️ TECHNOLOGY STACK
+PyTorch
+Vision Transformers
+Apache Spark (Dataproc)
+Google Cloud Vertex AI
+BigQuery GIS
+MLflow
+Terraform
+Docker
 
-🔐 Future Enhancements
-Multi-spectral satellite support (Sentinel-2)
-Temporal change detection models
+🚀 FUTURE EXTENSIONS
+Sentinel-2 multi-spectral support
+Temporal satellite analysis (time-series)
 Semantic segmentation (UNet / DeepLabV3)
 Real-time streaming ingestion (Pub/Sub)
+Kubernetes deployment (GKE)

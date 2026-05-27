@@ -1,99 +1,81 @@
-
-
-```markdown
-# 📊 System Diagrams — Satellite Land Classification
+ System Architecture Diagrams
 
 ---
 
-## 🧠 1. Full System Architecture
+# 🧠 1. FULL SYSTEM ARCHITECTURE
 
 ```text
 [ Satellite Images ]
-         ↓
-[ Data Ingestion Layer ]
-         ↓
+        ↓
+[ Data Layer ]
+        ↓
 [ Preprocessing Pipeline ]
-         ↓
-[ Feature Engineering ]
-         ↓
-[ CNN / ViT / Hybrid Models ]
-         ↓
-[ Training Engine ]
-         ↓
+        ↓
+[ Dataset Loader ]
+        ↓
+[ Model Training (CNN / ViT / Hybrid) ]
+        ↓
 [ MLflow Tracking ]
-         ↓
+        ↓
 [ Model Registry ]
-         ↓
-[ Deployment Layer (FastAPI / Vertex AI) ]
-         ↓
+        ↓
+[ Vertex AI Deployment ]
+        ↓
 [ Monitoring Layer ]
-         ↓
-[ Auto Retraining Pipeline ]
-
-
-
- 2. MLOps Lifecycle
+        ↓
+[ Auto Retraining System ]
+🔄 2. MLOps LIFECYCLE
 Experiment → Train → Track → Register → Deploy → Monitor → Retrain
-
-
- 3. Cloud Architecture (GCP)
+☁️ 3. GOOGLE CLOUD ARCHITECTURE
                  Google Cloud Platform
------------------------------------------------------
+------------------------------------------------
 
-Cloud Storage (Dataset)
+Cloud Storage (Satellite Data)
         ↓
 Dataproc (Spark Processing)
         ↓
 Vertex AI Training Jobs
         ↓
-Vertex AI Endpoint (Serving)
+Vertex AI Endpoint (Inference)
         ↓
 BigQuery GIS (Analytics)
         ↓
-Monitoring (Drift + Metrics)
-
-
-4. Model Architecture Flow
+Monitoring System
+🧠 4. MODEL PIPELINE
 Input Image (224x224)
         ↓
-CNN Backbone (ResNet / EfficientNet)
+CNN Backbone / Vision Transformer
         ↓
-Feature Vector (2048)
-        ↓
-Transformer Encoder (Optional)
+Feature Embedding
         ↓
 Classifier Head
         ↓
-Softmax Output (10 Classes)
-
-
- 5. Monitoring Flow
-Prediction Output
-        ↓
+Softmax Output
+📡 5. MONITORING FLOW
+Predictions
+     ↓
 Performance Monitor
-        ↓
+     ↓
 Data Drift Detector
-        ↓
+     ↓
 Model Drift Detector
-        ↓
-Drift Monitor Aggregator
-        ↓
+     ↓
+Drift Aggregator
+     ↓
 Alert / Retraining Trigger
-        ↓
-Dataproc Job / Vertex Pipeline
-
-
- 6. Auto-Retraining Loop
+     ↓
+Dataproc + Vertex AI Pipeline
+🚀 6. AUTO-RETRAINING LOOP
 Drift Detected
       ↓
 Trigger Pipeline
       ↓
-Dataproc Spark Processing
+Dataproc Spark Job
       ↓
-Retraining Model
+Retraining
       ↓
 MLflow Logging
       ↓
 Model Registry Update
       ↓
-Deployment Update
+Vertex AI Deployment Update
