@@ -39,3 +39,4 @@ dvc
 pytest
 black
 flake8
+albumentations
