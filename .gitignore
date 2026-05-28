@@ -1,0 +1,18 @@
+# Data
+data/
+*.zip
+*.tar
+
+# Models
+models/
+*.pth
+*.pt
+
+# Environment
+__pycache__/
+.venv/
+venv/
+*.env
+
+# Notebooks outputs
+.ipynb_checkpoints/
