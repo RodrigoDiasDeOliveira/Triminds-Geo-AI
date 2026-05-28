@@ -16,7 +16,7 @@ seaborn
 
 rasterio
 geopandas
-gdal
+
 shapely
 
 pyyaml
