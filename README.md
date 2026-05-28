@@ -16,7 +16,9 @@ Built with PyTorch, MLOps practices, and GCP services (Vertex AI, Dataproc, BigQ
 - Build high-performance land cover classification models
 - Compare CNNs, Vision Transformers, and Hybrid architectures
 - Create scalable geospatial ML pipelines
-- Enable production deployment on Google Cloud Platform
+- Build a clean, modular, and maintainable codebase
+- Prepare scalable data pipelines for large satellite datasets
+- Integrate with Google Cloud Platform (Vertex AI + Dataproc)
 - Implement full MLOps lifecycle (train → track → deploy → monitor → retrain)
 
 ---
