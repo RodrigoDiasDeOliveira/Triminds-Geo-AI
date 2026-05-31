@@ -45,3 +45,5 @@ timm
 pytest
 pytest-cov
 pytest-mock
+
+pyproj
