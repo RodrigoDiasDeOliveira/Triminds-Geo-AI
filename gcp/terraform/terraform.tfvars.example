@@ -1,0 +1,13 @@
+project_id = "my-gcp-project"
+
+region = "us-central1"
+
+bucket_name = "satellite-land-classification"
+
+artifact_repository = "satellite-ai"
+
+service_account_name = "satellite-ai-sa"
+
+topic_name = "satellite-images"
+
+scheduler_name = "daily-training"
