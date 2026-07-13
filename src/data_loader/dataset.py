@@ -1,75 +1,67 @@
 from pathlib import Path
-from typing import List, Tuple, Optional
+from typing import List, Tuple, Optional, Callable
 from PIL import Image
 import torch
-from torch.utils.data import Dataset
+from torch.utils.data import Dataset, DataLoader
 import torchvision.transforms as transforms
 
-from config.config import Config  # Vamos importar a config depois
+
+def default_transforms(image_size: int = 224) -> transforms.Compose:
+    return transforms.Compose([
+        transforms.Resize((image_size, image_size)),
+        transforms.ToTensor(),
+        transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                             std=[0.229, 0.224, 0.225]),
+    ])
 
 
 class SatelliteDataset(Dataset):
-    """
-    Dataset personalizado para imagens de satélite.
-    Suporta RGB e futuro suporte multiespectral.
-    """
+    """Dataset de imagens de satélite (RGB, extensível a multiespectral)."""
 
     def __init__(
         self,
-        image_paths: List[str],
-        labels: List[int],
-        transform: Optional[transforms.Compose] = None,
-        image_size: int = 224
+        image_paths: Optional[List[str]] = None,
+        labels: Optional[List[int]] = None,
+        transform: Optional[Callable] = None,
+        image_size: int = 224,
+        data_path: Optional[str] = None,
     ):
-        self.image_paths = image_paths
-        self.labels = labels
+        # Suporta construção via listas OU via diretório organizado em subpastas por classe
+        if data_path is not None and image_paths is None:
+            image_paths, labels = self._scan_directory(data_path)
+        self.image_paths = image_paths or []
+        self.labels = labels or []
         self.image_size = image_size
-        
-        # Usa transform passado ou cria o default
-        self.transform = transform or self._get_default_transforms()
+        self.transform = transform or default_transforms(image_size)
 
-    def _get_default_transforms(self):
-        return transforms.Compose([
-            transforms.Resize((self.image_size, self.image_size)),
-            transforms.ToTensor(),
-            transforms.Normalize(
-                mean=[0.485, 0.456, 0.406],
-                std=[0.229, 0.224, 0.225]
-            )
-        ])
+    @staticmethod
+    def _scan_directory(root: str) -> Tuple[List[str], List[int]]:
+        root_p = Path(root)
+        if not root_p.exists():
+            return [], []
+        classes = sorted([d.name for d in root_p.iterdir() if d.is_dir()])
+        cls_to_idx = {c: i for i, c in enumerate(classes)}
+        paths, labels = [], []
+        for c in classes:
+            for f in (root_p / c).glob("*"):
+                if f.suffix.lower() in {".png", ".jpg", ".jpeg", ".tif", ".tiff"}:
+                    paths.append(str(f))
+                    labels.append(cls_to_idx[c])
+        return paths, labels
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self.image_paths)
 
     def __getitem__(self, idx: int) -> Tuple[torch.Tensor, int]:
-        try:
-            image = Image.open(self.image_paths[idx]).convert("RGB")
-            label = self.labels[idx]
-
-            if self.transform:
-                image = self.transform(image)
-
-            return image, label
-
-        except Exception as e:
-            raise RuntimeError(f"Error loading image {self.image_paths[idx]}: {e}")
+        image = Image.open(self.image_paths[idx]).convert("RGB")
+        label = self.labels[idx]
+        if self.transform:
+            image = self.transform(image)
+        return image, label
 
 
-def get_dataloader(
-    image_paths: List[str],
-    labels: List[int],
-    batch_size: int = 32,
-    shuffle: bool = True,
-    num_workers: int = 4,
-    transform: Optional = None
-):
-    """Função helper para criar DataLoader rapidamente."""
+def get_dataloader(image_paths, labels, batch_size=32, shuffle=True,
+                   num_workers=4, transform=None) -> DataLoader:
     dataset = SatelliteDataset(image_paths, labels, transform=transform)
-    
-    return torch.utils.data.DataLoader(
-        dataset,
-        batch_size=batch_size,
-        shuffle=shuffle,
-        num_workers=num_workers,
-        pin_memory=True
-    )
+    return DataLoader(dataset, batch_size=batch_size, shuffle=shuffle,
+                      num_workers=num_workers, pin_memory=True)
