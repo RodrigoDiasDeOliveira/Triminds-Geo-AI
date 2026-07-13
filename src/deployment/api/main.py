@@ -1,36 +1,43 @@
-import torch
-from fastapi import FastAPI, UploadFile, File
-from PIL import Image
 import io
+import os
+from functools import lru_cache
 
-from src.models.model_factory import build_model
+import torch
+from fastapi import FastAPI, File, HTTPException, UploadFile
+from PIL import Image
+
 from src.data_loader.dataset import default_transforms
+from src.models.model_factory import build_model
 
-app = FastAPI()
+app = FastAPI(title="Satellite Land Classification API")
+DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+MODEL_PATH = os.environ.get("MODEL_PATH", "model.pth")
+MODEL_NAME = os.environ.get("MODEL_NAME", "resnet50")
+NUM_CLASSES = int(os.environ.get("NUM_CLASSES", "10"))
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-model = build_model("resnet50", num_classes=10)
-model.load_state_dict(torch.load("model.pth", map_location=device))
-model.to(device)
-model.eval()
+@lru_cache(maxsize=1)
+def get_model():
+    model = build_model(MODEL_NAME, num_classes=NUM_CLASSES)
+    if os.path.exists(MODEL_PATH):
+        model.load_state_dict(torch.load(MODEL_PATH, map_location=DEVICE))
+    model.to(DEVICE).eval()
+    return model
 
-transform = default_transforms()
+
+@app.get("/health")
+def health():
+    return {"status": "ok", "model_loaded": os.path.exists(MODEL_PATH)}
 
 
 @app.post("/predict")
 async def predict(file: UploadFile = File(...)):
-
-    image_bytes = await file.read()
-
-    image = Image.open(io.BytesIO(image_bytes)).convert("RGB")
-
-    tensor = transform(image).unsqueeze(0).to(device)
-
+    try:
+        image = Image.open(io.BytesIO(await file.read())).convert("RGB")
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Invalid image: {e}")
+    tensor = default_transforms()(image).unsqueeze(0).to(DEVICE)
     with torch.no_grad():
-
-        outputs = model(tensor)
-
-        prediction = torch.argmax(outputs, dim=1).item()
-
-    return {"prediction": prediction}
+        outputs = get_model()(tensor)
+        pred = int(torch.argmax(outputs, dim=1).item())
+    return {"prediction": pred}
