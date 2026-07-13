@@ -1,5 +1,9 @@
 # 🛰️ Satellite Land Classification Platform
 
+
+![alt text](<ChatGPT Image 13 de jul. de 2026, 10_47_52.png>)
+
+
 A production-grade **cloud-native machine learning platform** for satellite image classification focused on:
 
 - Land use classification
