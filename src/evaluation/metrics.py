@@ -1,32 +1,14 @@
-from sklearn.metrics import (
-    accuracy_score,
-    precision_score,
-    recall_score,
-    f1_score
-)
+import torch
+from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
+import numpy as np
 
-
-def calculate_metrics(y_true, y_pred):
-
+def compute_metrics(outputs, labels):
+    preds = torch.argmax(outputs, dim=1).cpu().numpy()
+    labels = labels.cpu().numpy()
+    
     return {
-
-        "accuracy": accuracy_score(y_true, y_pred),
-
-        "precision": precision_score(
-            y_true,
-            y_pred,
-            average="weighted"
-        ),
-
-        "recall": recall_score(
-            y_true,
-            y_pred,
-            average="weighted"
-        ),
-
-        "f1_score": f1_score(
-            y_true,
-            y_pred,
-            average="weighted"
-        )
+        "accuracy": accuracy_score(labels, preds),
+        "f1": f1_score(labels, preds, average='weighted'),
+        "precision": precision_score(labels, preds, average='weighted'),
+        "recall": recall_score(labels, preds, average='weighted')
     }

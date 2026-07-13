@@ -1,9 +1,12 @@
+# Core ML
 torch
 torchvision
 torchaudio
 transformers
 timm
 albumentations
+
+# Data & Utils
 numpy
 pandas
 scikit-learn
@@ -15,25 +18,30 @@ rasterio
 geopandas
 shapely
 pyproj
+
+# Config & Logging
 pyyaml
 hydra-core
 mlflow
 tensorboard
+
+# API
 fastapi
 uvicorn
+
+# Utils
 tqdm
+
+# GCP
 google-cloud-storage
 google-cloud-aiplatform
 google-cloud-bigquery
 pyspark
+
+# Dev & Testing
 dvc
 pytest
 pytest-cov
 pytest-mock
 black
 flake8
-pytest.ini
-[pytest]
-pythonpath = .
-testpaths = tests
-addopts = -ra -q

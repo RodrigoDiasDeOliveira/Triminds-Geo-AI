@@ -16,3 +16,6 @@ venv/
 
 # Notebooks outputs
 .ipynb_checkpoints/
+
+config/gcp.yaml
+*.env

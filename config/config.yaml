@@ -16,12 +16,41 @@ data:
   train_dir: "data/train"
   val_dir: "data/val"
   test_dir: "data/test"
-  num_classes: 10                    # Ajuste conforme seu dataset
-  image_size: [224, 224]             # Height, Width
-  bands: [1, 2, 3, 4]                # Ex: RGB + NIR (ajuste conforme suas imagens)
+  num_classes: 10
+  image_size: [224, 224]
+  bands: [1, 2, 3, 4]
+  channels: 3
   normalize:
     mean: [0.485, 0.456, 0.406]
     std: [0.229, 0.224, 0.225]
+  dataloader:
+    batch_size: 32
+    num_workers: 4
+    shuffle: true
+
+dataset:
+  name: "EuroSAT"
+  paths:
+    train: "data/raw/train"
+    validation: "data/raw/val"
+    test: "data/raw/test"
+  image:
+    size: 224
+    channels: 3
+  classes:
+    - AnnualCrop
+    - Forest
+    - HerbaceousVegetation
+    - Highway
+    - Industrial
+    - Pasture
+    - PermanentCrop
+    - Residential
+    - River
+    - SeaLake
+  preprocessing:
+    normalize: true
+    augmentation: true
 
 # ==========================
 # Training Configuration
@@ -33,7 +62,7 @@ training:
   weight_decay: 0.0001
   num_workers: 4
   early_stopping_patience: 8
-  mixed_precision: true               # FP16 (torch.amp)
+  mixed_precision: true
 
 optimizer:
   name: "AdamW"
@@ -45,8 +74,8 @@ optimizer:
 # Model Configuration
 # ==========================
 model:
-  name: "hybrid"                      # Options: cnn, vit, hybrid
-  backbone: "efficientnet_b0"         # ou resnet50, vit_base_patch16_224, etc.
+  name: "hybrid"
+  backbone: "efficientnet_b0"
   pretrained: true
   dropout: 0.3
   freeze_backbone: false
@@ -74,7 +103,7 @@ evaluation:
 # GCP & Spark (Future)
 # ==========================
 gcp:
-  project_id: "seu-project-id"
+  project_id: "${GCP_PROJECT_ID}"
   region: "us-central1"
   bucket: "gs://seu-bucket-name"
   
@@ -98,4 +127,4 @@ paths:
 logging:
   level: "INFO"
   save_experiment: true
-  use_mlflow: false                    # Ativar quando implementar MLflow
+  use_mlflow: false
