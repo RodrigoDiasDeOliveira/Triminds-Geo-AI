@@ -2,8 +2,6 @@ import albumentations as A
 from albumentations.pytorch import ToTensorV2
 from typing import Optional
 
-from config.config import Config  # Vamos importar a config
-
 
 def get_train_augmentations(image_size: int = 224) -> A.Compose:
     """Augmentations para treinamento (com forte augmentação)"""
