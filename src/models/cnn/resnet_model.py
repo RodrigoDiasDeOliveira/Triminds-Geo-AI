@@ -1,16 +1,9 @@
-from torchvision.models import efficientnet_b0
+from torchvision.models import resnet50
 import torch.nn as nn
 
 
-def build_efficientnet(num_classes):
-
-    model = efficientnet_b0(weights="DEFAULT")
-
-    in_features = model.classifier[1].in_features
-
-    model.classifier[1] = nn.Linear(
-        in_features,
-        num_classes
-    )
-
+def build_resnet(num_classes: int):
+    model = resnet50(weights="DEFAULT")
+    in_features = model.fc.in_features
+    model.fc = nn.Linear(in_features, num_classes)
     return model
