@@ -1,6 +1,6 @@
 from unittest.mock import patch
 
-from gcp.vertex_ai.pipeline_client import VertexPipelineClient
+from src.gcp.vertex_ai.pipeline_client import VertexPipelineClient
 
 
 @patch("gcp.vertex_ai.pipeline_client.aiplatform")

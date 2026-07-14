@@ -1,4 +1,4 @@
-from gcp.dataproc.dataproc_job import DataprocJob
+from src.gcp.dataproc.dataproc_job import DataprocJob
 
 
 def test_dataproc_init():
