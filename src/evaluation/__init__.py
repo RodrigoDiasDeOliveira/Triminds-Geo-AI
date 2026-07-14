@@ -1,8 +1,7 @@
 """
-Evaluation metrics, inference and model validation.
+Evaluation utilities.
 """
 
-from .evaluator import Evaluator
 from .metrics import calculate_metrics
 
-__all__ = ["Evaluator", "calculate_metrics"]
+__all__ = ["calculate_metrics"]

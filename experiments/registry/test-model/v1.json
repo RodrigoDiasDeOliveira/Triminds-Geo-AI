@@ -1,0 +1,8 @@
+{
+    "model_name": "test-model",
+    "model_path": null,
+    "version": 1,
+    "metadata": {
+        "acc": 0.9
+    }
+}

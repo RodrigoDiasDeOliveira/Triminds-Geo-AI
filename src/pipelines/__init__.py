@@ -1,7 +1,7 @@
 """
-Training and inference pipelines (including future Spark + GCP pipelines).
+Training and inference pipelines.
 """
 
-from .training_pipeline import TrainingPipeline
+from .training_pipeline import run_training_pipeline
 
-__all__ = ["TrainingPipeline"]
+__all__ = ["run_training_pipeline"]

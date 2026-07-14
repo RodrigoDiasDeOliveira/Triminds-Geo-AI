@@ -1,4 +1,5 @@
-"""Hybrid CNN + ViT models"""
-from .model import HybridCNNViT
+"""Hybrid CNN + Transformer models."""
 
-__all__ = ["HybridCNNViT"]
+from .cnn_transformer_hybrid import CNNTransformerHybrid
+
+__all__ = ["CNNTransformerHybrid"]

@@ -1,17 +1,17 @@
 from src.pipelines.preprocessing_pipeline import PreprocessingPipeline
-from src.pipelines.training_pipeline import TrainingPipeline
+from src.pipelines.training_pipeline import run_training_pipeline
 
 
 def test_full_pipeline_flow():
-
     preprocessing = PreprocessingPipeline()
 
     preprocessing.run(
         input_path="data/raw/sample.jpg"
     )
 
-    trainer = TrainingPipeline()
+    result = run_training_pipeline(
+        config_path="config/config.yaml",
+        epochs=1,
+    )
 
-    result = trainer.run()
-
-    assert result is True
+    assert result["status"] == "ok"

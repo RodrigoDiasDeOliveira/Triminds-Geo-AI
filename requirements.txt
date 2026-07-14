@@ -32,6 +32,7 @@ uvicorn[standard]==0.30.6
 
 # Utils
 tqdm==4.66.5
+python-multipart
 
 # GCP
 google-cloud-storage==2.18.2
