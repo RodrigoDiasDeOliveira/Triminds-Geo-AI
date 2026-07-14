@@ -2,9 +2,9 @@ name: ML Pipeline CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   test:
@@ -24,10 +24,8 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            gdal-bin \
-            libgdal-dev \
-            libgl1 \
-            libglib2.0-0 \
+            gdal-bin libgdal-dev \
+            libgl1 libglib2.0-0 libgomp1 \
             libspatialindex-dev
 
       - name: Upgrade pip
@@ -35,20 +33,17 @@ jobs:
 
       - name: Install PyTorch (CPU)
         run: |
-          pip install torch torchvision torchaudio \
+          pip install torch==2.4.1 torchvision==0.19.1 torchaudio==2.4.1 \
             --index-url https://download.pytorch.org/whl/cpu
 
       - name: Install project dependencies
-        run: |
-          pip install -r requirements.txt
-          # Se estiver usando pyproject.toml (recomendado)
-          # pip install -e ".[dev]"
+        run: pip install -r requirements.txt
+
+      - name: Install lint tools
+        run: pip install ruff==0.6.9
 
       - name: Lint with Ruff
-        run: |
-          pip install ruff
-          ruff check src tests --output-format=github || true
+        run: ruff check src tests --output-format=github
 
       - name: Run tests
-        run: |
-          pytest tests/ -q --cov=src --cov-report=term-missing
+        run: pytest tests/ -q --cov=src --cov-report=term-missing
