@@ -1,6 +1,4 @@
-from src.mlops.experiments.experiment_tracker import (
-    ExperimentTracker
-)
+from src.mlops.experiments.experiment_tracker import ExperimentTracker
 
 
 def test_experiment_tracking():

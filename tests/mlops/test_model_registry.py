@@ -1,6 +1,4 @@
-from src.mlops.registry.model_registry import (
-    ModelRegistry
-)
+from src.mlops.registry.model_registry import ModelRegistry
 
 
 def test_model_registration():

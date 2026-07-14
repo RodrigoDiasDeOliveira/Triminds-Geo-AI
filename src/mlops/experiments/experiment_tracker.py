@@ -25,5 +25,5 @@ class ExperimentTracker:
 
     def load_experiment(self, run_id: str):
         path = self.base_path / run_id / "run.json"
-        with open(path, "r") as f:
+        with open(path) as f:
             return json.load(f)

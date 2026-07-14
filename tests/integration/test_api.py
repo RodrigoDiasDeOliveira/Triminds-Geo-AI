@@ -7,7 +7,6 @@ from fastapi.testclient import TestClient  # noqa: E402
 
 from src.deployment.api.main import app  # noqa: E402
 
-
 client = TestClient(app)
 
 

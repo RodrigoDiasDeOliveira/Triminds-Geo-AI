@@ -1,8 +1,6 @@
-from typing import Tuple, List, Optional
 import numpy as np
-from pyproj import Geod
 import rasterio
-from pathlib import Path
+from pyproj import Geod
 
 
 class GeoSpatial:
@@ -20,14 +18,14 @@ class GeoSpatial:
         norm_lon = (lon + 180) / 360
         return np.array([norm_lat, norm_lon])
 
-    def calculate_patch_center(self, bbox: Tuple[float, float, float, float]) -> Tuple[float, float]:
+    def calculate_patch_center(self, bbox: tuple[float, float, float, float]) -> tuple[float, float]:
         """Calcula o centro de uma bounding box (min_lat, min_lon, max_lat, max_lon)"""
         min_lat, min_lon, max_lat, max_lon = bbox
         center_lat = (min_lat + max_lat) / 2
         center_lon = (min_lon + max_lon) / 2
         return (center_lat, center_lon)
 
-    def compute_distance(self, point1: Tuple[float, float], point2: Tuple[float, float]) -> float:
+    def compute_distance(self, point1: tuple[float, float], point2: tuple[float, float]) -> float:
         """Calcula distância geodésica precisa entre dois pontos (lat, lon) em metros"""
         lat1, lon1 = point1
         lat2, lon2 = point2
@@ -49,8 +47,9 @@ class GeoSpatial:
                 }
         except Exception as e:
             raise RuntimeError(f"Failed to read raster metadata from {image_path}: {e}")
+        
 
-    def extract_patch_coordinates(self, image_path: str) -> Optional[dict]:
+    def extract_patch_coordinates(self, image_path: str) -> dict | None:
         """Extrai coordenadas do centro e bounds de uma imagem raster"""
         try:
             metadata = self.get_raster_metadata(image_path)

@@ -1,10 +1,5 @@
-from src.pipelines.training_pipeline import (
-    TrainingPipeline
-)
-
-from src.pipelines.preprocessing_pipeline import (
-    PreprocessingPipeline
-)
+from src.pipelines.preprocessing_pipeline import PreprocessingPipeline
+from src.pipelines.training_pipeline import TrainingPipeline
 
 
 def test_full_pipeline_flow():

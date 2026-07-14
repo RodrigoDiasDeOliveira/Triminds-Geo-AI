@@ -1,8 +1,8 @@
 from pathlib import Path
+
 from PIL import Image
 
 from src.utils.logger import setup_logger
-
 
 logger = setup_logger()
 

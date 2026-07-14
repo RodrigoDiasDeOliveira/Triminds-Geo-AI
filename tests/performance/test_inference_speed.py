@@ -1,5 +1,5 @@
 import time
-import torch
+
 from src.models.model_factory import build_model
 
 

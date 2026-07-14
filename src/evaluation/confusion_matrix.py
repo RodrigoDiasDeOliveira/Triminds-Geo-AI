@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
-from sklearn.metrics import confusion_matrix
 import seaborn as sns
+from sklearn.metrics import confusion_matrix
 
 
 def plot_confusion_matrix(

@@ -1,6 +1,4 @@
-from src.mlops.orchestration.pipeline_orchestrator import (
-    PipelineOrchestrator
-)
+from src.mlops.orchestration.pipeline_orchestrator import PipelineOrchestrator
 
 
 def test_pipeline_orchestration():

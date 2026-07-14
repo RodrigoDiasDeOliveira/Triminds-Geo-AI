@@ -1,8 +1,6 @@
 from unittest.mock import patch
 
-from src.pipelines.vertex_pipeline import (
-    VertexPipeline
-)
+from src.pipelines.vertex_pipeline import VertexPipeline
 
 
 @patch(

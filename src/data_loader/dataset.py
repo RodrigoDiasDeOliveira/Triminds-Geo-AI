@@ -1,9 +1,10 @@
+from collections.abc import Callable
 from pathlib import Path
-from typing import List, Tuple, Optional, Callable
-from PIL import Image
+
 import torch
-from torch.utils.data import Dataset, DataLoader
 import torchvision.transforms as transforms
+from PIL import Image
+from torch.utils.data import DataLoader, Dataset
 
 
 def default_transforms(image_size: int = 224) -> transforms.Compose:
@@ -20,11 +21,11 @@ class SatelliteDataset(Dataset):
 
     def __init__(
         self,
-        image_paths: Optional[List[str]] = None,
-        labels: Optional[List[int]] = None,
-        transform: Optional[Callable] = None,
+        image_paths: list[str] | None = None,
+        labels: list[int] | None = None,
+        transform: Callable | None = None,
         image_size: int = 224,
-        data_path: Optional[str] = None,
+        data_path: str | None = None,
     ):
         # Suporta construção via listas OU via diretório organizado em subpastas por classe
         if data_path is not None and image_paths is None:
@@ -35,7 +36,7 @@ class SatelliteDataset(Dataset):
         self.transform = transform or default_transforms(image_size)
 
     @staticmethod
-    def _scan_directory(root: str) -> Tuple[List[str], List[int]]:
+    def _scan_directory(root: str) -> tuple[list[str], list[int]]:
         root_p = Path(root)
         if not root_p.exists():
             return [], []
@@ -52,7 +53,7 @@ class SatelliteDataset(Dataset):
     def __len__(self) -> int:
         return len(self.image_paths)
 
-    def __getitem__(self, idx: int) -> Tuple[torch.Tensor, int]:
+    def __getitem__(self, idx: int) -> tuple[torch.Tensor, int]:
         image = Image.open(self.image_paths[idx]).convert("RGB")
         label = self.labels[idx]
         if self.transform:

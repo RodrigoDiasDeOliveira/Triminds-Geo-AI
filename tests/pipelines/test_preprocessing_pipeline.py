@@ -1,8 +1,5 @@
-import pytest
 
-from src.pipelines.preprocessing_pipeline import (
-    PreprocessingPipeline
-)
+from src.pipelines.preprocessing_pipeline import PreprocessingPipeline
 
 
 def test_preprocessing_pipeline_runs():

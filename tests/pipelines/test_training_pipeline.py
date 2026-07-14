@@ -9,7 +9,7 @@ from src.training.trainer import Trainer
 
 
 def load_config(path: str) -> dict:
-    with open(path, "r") as file:
+    with open(path) as file:
         return yaml.safe_load(file)
 
 

@@ -1,10 +1,11 @@
-import torch
 from pathlib import Path
+
+import torch
 from tqdm import tqdm
 
-from src.mlops.tracking.mlflow_logger import MLflowLogger
 from src.mlops.logging.logger import Logger
 from src.mlops.registry.model_registry import ModelRegistry
+from src.mlops.tracking.mlflow_logger import MLflowLogger
 
 
 class Trainer:
@@ -86,7 +87,6 @@ class Trainer:
     def _compute_metrics(self, outputs, labels):
         """Calcula todas as métricas de classificação"""
         from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
-        import numpy as np
 
         preds = torch.argmax(outputs, dim=1).numpy()
         labels_np = labels.numpy()

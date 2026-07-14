@@ -1,6 +1,6 @@
+
 import albumentations as A
 from albumentations.pytorch import ToTensorV2
-from typing import Optional
 
 
 def get_train_augmentations(image_size: int = 224) -> A.Compose:
