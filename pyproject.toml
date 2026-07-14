@@ -1,4 +1,4 @@
-project]
+[project]
 name = "satellite-land-classification"
 version = "0.1.0"
 description = "Land use and crop classification using satellite imagery"
