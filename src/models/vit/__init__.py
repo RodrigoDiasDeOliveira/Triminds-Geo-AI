@@ -1,4 +1,5 @@
-"""Vision Transformer models"""
-from .model import ViTModel
+"""Vision Transformer models."""
 
-__all__ = ["ViTModel"]
+from .vit_model import build_vit
+
+__all__ = ["build_vit"]

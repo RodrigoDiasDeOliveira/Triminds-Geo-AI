@@ -1,57 +1,69 @@
 import torch
 import torch.nn as nn
-import torchvision.models as models
+from torchvision.models import resnet50, ResNet50_Weights
 
 
 class CNNTransformerHybrid(nn.Module):
+    """
+    Hybrid CNN + Transformer model.
+    Uses a ResNet50 backbone followed by a Transformer Encoder.
+    """
 
-    def __init__(self, num_classes=10):
+    def __init__(
+        self,
+        num_classes: int = 10,
+        pretrained: bool = True,
+        **kwargs,
+    ):
+        super().__init__()
 
-        super(CNNTransformerHybrid, self).__init__()
-
-        # Backbone CNN (ResNet)
-        self.cnn = models.resnet50(weights="DEFAULT")
+        # CNN Backbone
+        weights = ResNet50_Weights.DEFAULT if pretrained else None
+        self.cnn = resnet50(weights=weights)
         self.cnn.fc = nn.Identity()
 
         cnn_out = 2048
 
-        # Projection layer para Transformer
+        # Feature Projection
         self.projection = nn.Linear(cnn_out, 512)
 
         # Transformer Encoder
         encoder_layer = nn.TransformerEncoderLayer(
             d_model=512,
             nhead=8,
-            batch_first=True
+            batch_first=True,
         )
 
         self.transformer = nn.TransformerEncoder(
             encoder_layer,
-            num_layers=2
+            num_layers=4,
         )
 
-        # Classifier final
+        # Classification Head
         self.classifier = nn.Sequential(
             nn.Linear(512, 256),
             nn.ReLU(),
             nn.Dropout(0.3),
-            nn.Linear(256, num_classes)
+            nn.Linear(256, num_classes),
         )
 
     def forward(self, x):
+        # CNN feature extraction
+        x = self.cnn(x)
 
-        # CNN features
-        x = self.cnn(x)              # (B, 2048)
+        # Projection
+        x = self.projection(x)
 
-        x = self.projection(x)       # (B, 512)
+        # Add sequence dimension for Transformer
+        x = x.unsqueeze(1)
 
-        # Transformer espera sequência → reshape fake sequence
-        x = x.unsqueeze(1)           # (B, 1, 512)
-
+        # Transformer
         x = self.transformer(x)
 
+        # Remove sequence dimension
         x = x.squeeze(1)
 
+        # Classification
         x = self.classifier(x)
 
         return x
