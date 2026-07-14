@@ -9,9 +9,7 @@ readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
 
-# Runtime deps are pinned in requirements.txt so CI, Docker and local dev
-# resolve to the same versions. Keep this list light — only what a `pip install .`
-# needs to import the package.
+# Runtime dependencies.
 dependencies = [
     "torch>=2.4,<2.5",
     "torchvision>=0.19,<0.20",
@@ -29,6 +27,7 @@ dev = [
     "isort==5.13.2",
     "pre-commit==3.8.0",
 ]
+
 big-data = [
     "pyspark==3.5.2",
     "dvc==3.55.2",
@@ -38,16 +37,19 @@ big-data = [
 requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
-# The tree uses `from src.<pkg>` imports, so `src` itself is the package root.
-# Do NOT set `package-dir = {"": "src"}` — that would collapse `src.` prefix
-# and break every existing import.
+# The project uses imports such as:
+#
+#     from src.models...
+#
+# Therefore "src" is part of the package name.
+# Do NOT use package-dir = {"": "src"}.
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["src*", "gcp*"]
+include = ["src*"]
 
 [tool.black]
 line-length = 100
-target-version = ['py310']
+target-version = ["py310"]
 
 [tool.isort]
 profile = "black"
@@ -56,15 +58,20 @@ line_length = 100
 [tool.ruff]
 line-length = 100
 target-version = "py310"
+fix = true
 
 [tool.ruff.lint]
 extend-select = ["I", "B", "UP"]
 ignore = ["E203"]
 
+[tool.ruff.lint.per-file-ignores]
+"src/deployment/api/main.py" = ["B008"]
+
 [tool.pytest.ini_options]
 pythonpath = ["."]
 testpaths = ["tests"]
 addopts = "-ra -q --cov=src --cov-report=term-missing"
+
 markers = [
     "slow: marks tests as slow (deselect with '-m \"not slow\"')",
 ]
