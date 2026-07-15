@@ -1,11 +1,12 @@
 import pytest
 
 pytest.importorskip("fastapi")
+pytest.importorskip("httpx")  # required by starlette.testclient
 pytest.importorskip("torch")
 
-from fastapi.testclient import TestClient  # noqa: E402
+from fastapi.testclient import TestClient  
 
-from src.deployment.api.main import app  # noqa: E402
+from src.deployment.api.main import app 
 
 client = TestClient(app)
 
