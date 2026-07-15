@@ -13,8 +13,8 @@ from .dataset import default_transforms as get_transforms
 
 __all__ = [
     "SatelliteDataset",
-    "SatelliteDataLoader",      # alias para compatibilidade
+    "SatelliteDataLoader",  # alias para compatibilidade
     "get_dataloader",
     "default_transforms",
-    "get_transforms"            # alias para compatibilidade
+    "get_transforms",  # alias para compatibilidade
 ]

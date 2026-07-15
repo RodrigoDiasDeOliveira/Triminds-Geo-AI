@@ -4,9 +4,10 @@ The ``google-cloud-dataproc`` package is an optional runtime dependency.
 I import it lazily so unit tests can stub the module and so importing this
 file never crashes when the package is not installed.i hope it works to you
 """
+
 from __future__ import annotations
 
-from typing import Any, Optional
+from typing import Any
 
 
 class DataprocJob:
@@ -15,7 +16,7 @@ class DataprocJob:
         project_id: str,
         region: str,
         cluster_name: str,
-        client: Optional[Any] = None,
+        client: Any | None = None,
     ) -> None:
         self.project_id = project_id
         self.region = region
@@ -29,15 +30,13 @@ class DataprocJob:
         from google.cloud import dataproc_v1 as dataproc  # type: ignore
 
         endpoint = f"{self.region}-dataproc.googleapis.com:443"
-        self._client = dataproc.JobControllerClient(
-            client_options={"api_endpoint": endpoint}
-        )
+        self._client = dataproc.JobControllerClient(client_options={"api_endpoint": endpoint})
         return self._client
 
     def submit_pyspark_job(
         self,
         main_python_file_uri: str,
-        args: Optional[list[str]] = None,
+        args: list[str] | None = None,
     ) -> Any:
         client = self._get_client()
         job = {

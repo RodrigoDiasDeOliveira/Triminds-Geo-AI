@@ -15,7 +15,6 @@ def predict(model, image_path, device):
     image = transform(image).unsqueeze(0).to(device)
 
     with torch.no_grad():
-
         outputs = model(image)
 
         prediction = torch.argmax(outputs, dim=1)

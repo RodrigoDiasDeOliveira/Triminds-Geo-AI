@@ -2,11 +2,10 @@ from sklearn.metrics import accuracy_score, f1_score
 
 
 class PerformanceMonitor:
-
     def evaluate(self, y_true, y_pred):
 
         return {
             "accuracy": accuracy_score(y_true, y_pred),
             "f1_score": f1_score(y_true, y_pred, average="weighted"),
-            "error_rate": 1 - accuracy_score(y_true, y_pred)
+            "error_rate": 1 - accuracy_score(y_true, y_pred),
         }

@@ -8,12 +8,13 @@ from torch.utils.data import DataLoader, Dataset
 
 
 def default_transforms(image_size: int = 224) -> transforms.Compose:
-    return transforms.Compose([
-        transforms.Resize((image_size, image_size)),
-        transforms.ToTensor(),
-        transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                             std=[0.229, 0.224, 0.225]),
-    ])
+    return transforms.Compose(
+        [
+            transforms.Resize((image_size, image_size)),
+            transforms.ToTensor(),
+            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+        ]
+    )
 
 
 class SatelliteDataset(Dataset):
@@ -61,8 +62,10 @@ class SatelliteDataset(Dataset):
         return image, label
 
 
-def get_dataloader(image_paths, labels, batch_size=32, shuffle=True,
-                   num_workers=4, transform=None) -> DataLoader:
+def get_dataloader(
+    image_paths, labels, batch_size=32, shuffle=True, num_workers=4, transform=None
+) -> DataLoader:
     dataset = SatelliteDataset(image_paths, labels, transform=transform)
-    return DataLoader(dataset, batch_size=batch_size, shuffle=shuffle,
-                      num_workers=num_workers, pin_memory=True)
+    return DataLoader(
+        dataset, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers, pin_memory=True
+    )

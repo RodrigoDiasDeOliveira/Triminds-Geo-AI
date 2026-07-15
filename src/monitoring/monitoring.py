@@ -2,7 +2,6 @@ import numpy as np
 
 
 class DriftMonitor:
-
     def __init__(self):
 
         self.reference_distribution = None
@@ -15,8 +14,6 @@ class DriftMonitor:
 
         new_mean = np.mean(new_data, axis=0)
 
-        drift = np.linalg.norm(
-            new_mean - self.reference_distribution
-        )
+        drift = np.linalg.norm(new_mean - self.reference_distribution)
 
         return drift > threshold
