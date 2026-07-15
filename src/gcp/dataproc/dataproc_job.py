@@ -1,38 +1,56 @@
-from google.cloud import dataproc_v1 as dataproc
+"""Thin wrapper around the Google Cloud Dataproc JobController client.
+
+The ``google-cloud-dataproc`` package is an optional runtime dependency.
+I import it lazily so unit tests can stub the module and so importing this
+file never crashes when the package is not installed.i hope it works to you
+"""
+from __future__ import annotations
+
+from typing import Any, Optional
 
 
 class DataprocJob:
-
-    def __init__(self, project_id, region, cluster_name):
-
+    def __init__(
+        self,
+        project_id: str,
+        region: str,
+        cluster_name: str,
+        client: Optional[Any] = None,
+    ) -> None:
         self.project_id = project_id
         self.region = region
         self.cluster_name = cluster_name
+        self._client = client
 
-        self.client = dataproc.JobControllerClient(
-            client_options={
-                "api_endpoint": f"{region}-dataproc.googleapis.com:443"
-            }
+    def _get_client(self):
+        if self._client is not None:
+            return self._client
+        # Lazy import — only require google-cloud-dataproc at call time.
+        from google.cloud import dataproc_v1 as dataproc  # type: ignore
+
+        endpoint = f"{self.region}-dataproc.googleapis.com:443"
+        self._client = dataproc.JobControllerClient(
+            client_options={"api_endpoint": endpoint}
         )
+        return self._client
 
-    def submit_pyspark_job(self, main_python_file_uri, args=None):
-
+    def submit_pyspark_job(
+        self,
+        main_python_file_uri: str,
+        args: Optional[list[str]] = None,
+    ) -> Any:
+        client = self._get_client()
         job = {
-            "placement": {
-                "cluster_name": self.cluster_name
-            },
+            "placement": {"cluster_name": self.cluster_name},
             "pyspark_job": {
                 "main_python_file_uri": main_python_file_uri,
-                "args": args or []
-            }
+                "args": args or [],
+            },
         }
-
-        operation = self.client.submit_job_as_operation(
+        return client.submit_job(
             request={
                 "project_id": self.project_id,
                 "region": self.region,
-                "job": job
+                "job": job,
             }
         )
-
-        return operation.result()
