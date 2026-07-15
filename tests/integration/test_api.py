@@ -1,10 +1,5 @@
-import pytest
-
-pytest.importorskip("fastapi")      # noqa: E402
-pytest.importorskip("httpx")        # noqa: E402
-pytest.importorskip("torch")        # noqa: E402
-
 from fastapi.testclient import TestClient
+
 from src.deployment.api.main import app
 
 client = TestClient(app)
