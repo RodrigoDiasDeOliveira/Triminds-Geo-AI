@@ -1,0 +1,15 @@
+artifact_uri: file:///workspaces/satellite-land-classification/mlruns/809551898653111336/27c232c8affd490dac8afe54d1c6847b/artifacts
+end_time: 1784135576392
+entry_point_name: ''
+experiment_id: '809551898653111336'
+lifecycle_stage: active
+run_id: 27c232c8affd490dac8afe54d1c6847b
+run_name: invincible-stoat-97
+run_uuid: 27c232c8affd490dac8afe54d1c6847b
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1784135576123
+status: 4
+tags: []
+user_id: codespace

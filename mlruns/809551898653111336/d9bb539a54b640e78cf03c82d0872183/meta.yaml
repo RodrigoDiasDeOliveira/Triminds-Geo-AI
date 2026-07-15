@@ -1,0 +1,15 @@
+artifact_uri: file:///workspaces/satellite-land-classification/mlruns/809551898653111336/d9bb539a54b640e78cf03c82d0872183/artifacts
+end_time: 1784134075797
+entry_point_name: ''
+experiment_id: '809551898653111336'
+lifecycle_stage: active
+run_id: d9bb539a54b640e78cf03c82d0872183
+run_name: fearless-robin-797
+run_uuid: d9bb539a54b640e78cf03c82d0872183
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1784134075697
+status: 4
+tags: []
+user_id: codespace

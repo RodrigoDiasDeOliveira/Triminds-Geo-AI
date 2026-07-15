@@ -1,0 +1,10 @@
+{
+    "model_name": "satellite-model",
+    "model_path": null,
+    "version": 1,
+    "metadata": {
+        "epochs": 1,
+        "framework": "pytorch",
+        "best_val_loss": 0.0
+    }
+}

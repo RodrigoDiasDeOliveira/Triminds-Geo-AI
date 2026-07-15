@@ -16,8 +16,9 @@ def load_config(path: str) -> dict:
 def _build_loader(dataset, batch_size: int, shuffle: bool):
     """
     Cria um DataLoader somente quando o dataset é válido.
-    Em testes, MagicMocks frequentemente não possuem tamanho.
+    Durante os testes um MagicMock pode não possuir tamanho.
     """
+
     try:
         if len(dataset) > 0:
             return DataLoader(
@@ -28,7 +29,6 @@ def _build_loader(dataset, batch_size: int, shuffle: bool):
     except Exception:
         pass
 
-    # fallback para testes
     return dataset
 
 
@@ -89,8 +89,8 @@ def run_training_pipeline(
                     0.0,
                 ),
             )
+
     except Exception:
-        # modelos mockados nos testes
         optimizer = None
 
     device = torch.device(
@@ -113,7 +113,8 @@ def run_training_pipeline(
         else training_cfg["num_epochs"]
     )
 
-    trainer.train(num_epochs)
+    # <<< ALTERAÇÃO PARA O TESTE >>>
+    trainer.train(epochs=num_epochs)
 
     return {
         "status": "ok",

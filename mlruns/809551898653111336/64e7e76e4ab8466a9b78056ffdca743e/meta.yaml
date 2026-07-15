@@ -1,0 +1,15 @@
+artifact_uri: file:///workspaces/satellite-land-classification/mlruns/809551898653111336/64e7e76e4ab8466a9b78056ffdca743e/artifacts
+end_time: 1784135867119
+entry_point_name: ''
+experiment_id: '809551898653111336'
+lifecycle_stage: active
+run_id: 64e7e76e4ab8466a9b78056ffdca743e
+run_name: funny-loon-165
+run_uuid: 64e7e76e4ab8466a9b78056ffdca743e
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1784135842635
+status: 3
+tags: []
+user_id: codespace
