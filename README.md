@@ -1,7 +1,15 @@
-# 🛰️ Satellite Land Classification Platform
+Triminds Geo AI
+Enterprise Geospatial AI Platform for Earth Observation, Remote Sensing and Satellite Intelligence
+
+Triminds Geo AI is an enterprise-grade cloud-native Artificial Intelligence platform designed to build, deploy and operate geospatial machine learning solutions at scale.
+
+The platform combines Computer Vision, Deep Learning, MLOps, and Google Cloud Platform to transform satellite imagery into actionable geospatial intelligence.
+
+Whether the goal is monitoring agricultural areas, detecting environmental changes, classifying land cover, or building custom Earth Observation solutions, Triminds Geo AI provides a modular architecture ready for production environments.
 
 
-![alt text](<ChatGPT Image 13 de jul. de 2026, 10_47_52.png>)
+<img width="1536" height="1024" alt="satelite" src="https://github.com/user-attachments/assets/291af6bb-21c5-437b-ab41-734048ddb39f" />
+
 
 
 A production-grade **cloud-native machine learning platform** for satellite image classification focused on:
@@ -10,10 +18,23 @@ A production-grade **cloud-native machine learning platform** for satellite imag
 - Precision agriculture
 - Geospatial intelligence
 - Scalable ML pipelines on Google Cloud
+  
 
 Built with PyTorch, MLOps practices, and GCP services (Vertex AI, Dataproc, BigQuery).
 
 ---
+
+Part of the Triminds Ecosystem
+
+Triminds Geo AI is one of the products that compose the Triminds Platform, sharing the same engineering principles:
+
+- Modular Architecture
+- Cloud-Native Design
+- AI-First Development
+- Infrastructure as Code
+- Enterprise Security
+- MLOps Best Practices
+- Production-Ready Components
 
 # 🚀 Project Goals
 
@@ -201,7 +222,8 @@ Automated retraining system
 Cloud
 Kubernetes (GKE) deployment
 Streaming ingestion (Pub/Sub)
-Real-time inference monitoring
+Real-time inference 
+
 🧠 Design Principles
 Modular architecture
 Separation of concerns (ML / MLOps / Monitoring / Infra)
@@ -209,6 +231,7 @@ Cloud-native design
 Reproducibility
 Production-first mindset
 Scalable pipeline architecture
+
 📊 Project Status
 
 🟢 Active Development
