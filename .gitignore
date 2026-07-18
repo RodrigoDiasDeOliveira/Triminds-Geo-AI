@@ -13,6 +13,7 @@ __pycache__/
 .venv/
 venv/
 *.env
+mlruns/
 
 # Notebooks outputs
 .ipynb_checkpoints/
