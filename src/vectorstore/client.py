@@ -1,9 +1,10 @@
 # src/vectorstore/client.py
-import psycopg2
-from typing import List
 
+import psycopg2
 import torch
+
 from ..features.geo_feature import GeoFeature
+
 
 class VectorStoreClient:
     """Cliente para Vector Database (pgvector, Qdrant, etc.)"""

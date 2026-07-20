@@ -1,5 +1,5 @@
 import torch
-import pytest
+
 from src.features.adapter import EmbeddingAdapter, get_adapter
 
 

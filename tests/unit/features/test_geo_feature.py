@@ -1,5 +1,6 @@
-from src.features.geo_feature import GeoFeature
 import torch
+
+from src.features.geo_feature import GeoFeature
 
 
 def test_geo_feature_creation():

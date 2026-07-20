@@ -1,6 +1,6 @@
 # src/ingestion/__init__.py
-from .registry import ProviderRegistry
 from .providers.google_embedding import GoogleEmbeddingProvider
+from .registry import ProviderRegistry
 
 # Registro automático ao importar o módulo
 ProviderRegistry.register("google_embedding", GoogleEmbeddingProvider)

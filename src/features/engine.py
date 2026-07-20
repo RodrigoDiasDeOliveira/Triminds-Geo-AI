@@ -1,9 +1,9 @@
 # src/features/engine.py (versão final)
 from pathlib import Path
-from typing import Dict, List
+
 from ..ingestion.registry import ProviderRegistry
 from .geo_feature import GeoFeature
-from ..ingestion.base import GeoAsset
+
 
 class GeoFeatureEngine:
     def __init__(self):
@@ -13,7 +13,7 @@ class GeoFeatureEngine:
         ProviderRegistry.register(name, type(provider))
         self.providers[name] = provider
     
-    def process(self, config: Dict) -> List[GeoFeature]:
+    def process(self, config: dict) -> list[GeoFeature]:
         provider_name = config["source"]["provider"]
         provider = self.providers.get(provider_name)
         

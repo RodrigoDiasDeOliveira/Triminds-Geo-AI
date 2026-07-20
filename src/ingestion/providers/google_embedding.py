@@ -1,18 +1,19 @@
 # src/ingestion/providers/google_embedding.py
-import ee
 from pathlib import Path
-from typing import Optional, Dict
-from ..base import GeoProvider, GeoAsset, GeoFeature
-from ..export_manager import ExportManager
+
+import ee
+
 from ...features.metadata import create_metadata
-from ...features.adapter import EmbeddingAdapter
+from ..base import GeoAsset, GeoFeature, GeoProvider
+from ..export_manager import ExportManager
+
 
 class GoogleEmbeddingProvider(GeoProvider):
     name = "google_embedding"
     provider_type = "embedding"
     collection_id = "GOOGLE/SATELLITE_EMBEDDING/V1/ANNUAL"
     
-    def __init__(self, bucket_name: str, project_id: Optional[str] = None):
+    def __init__(self, bucket_name: str, project_id: str | None = None):
         self.bucket_name = bucket_name
         self.project_id = project_id
         self.export_manager = ExportManager()

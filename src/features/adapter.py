@@ -2,6 +2,7 @@
 import torch
 import torch.nn as nn
 
+
 class EmbeddingAdapter(nn.Module):
     """Adapter sofisticado para preservar conhecimento pré-treinado"""
     

@@ -1,5 +1,3 @@
-import pytest
-from pathlib import Path
 from src.ingestion.providers.google_embedding import GoogleEmbeddingProvider
 
 

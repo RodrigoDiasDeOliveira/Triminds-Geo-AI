@@ -1,7 +1,8 @@
 # src/workflows/ingestion_pipeline.py
-from typing import Dict
+
 from ..features.engine import GeoFeatureEngine
 from ..vectorstore.client import VectorStoreClient
+
 
 class IngestionPipeline:
     """Pipeline completo de ingestão"""
@@ -10,7 +11,7 @@ class IngestionPipeline:
         self.engine = GeoFeatureEngine()
         self.vector_store = VectorStoreClient()
     
-    def run(self, config: Dict):
+    def run(self, config: dict):
         features = self.engine.ingest_and_extract(config)
         
         # Salva no Vector Store

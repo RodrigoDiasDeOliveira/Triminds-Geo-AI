@@ -1,26 +1,27 @@
 # src/features/geo_feature.py
 from dataclasses import dataclass, field
-from typing import Dict, Optional, Any
+from typing import Any
+
 import torch
-from datetime import datetime
+
 
 @dataclass
 class GeoFeature:
     """Representação unificada de qualquer observação geoespacial"""
     geometry: Any                    # shapely geometry ou bbox
     timestamp: str
-    embedding: Optional[torch.Tensor] = None
-    properties: Dict = field(default_factory=dict)
+    embedding: torch.Tensor | None = None
+    properties: dict = field(default_factory=dict)
     source: str = ""
     confidence: float = 1.0
-    feature_id: Optional[str] = None
+    feature_id: str | None = None
     tags: torch.List[str] = field(default_factory=list)
     
     def __post_init__(self):
         if self.feature_id is None:
             self.feature_id = f"{self.source}_{self.timestamp}"
     
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "id": self.feature_id,
             "geometry": str(self.geometry),

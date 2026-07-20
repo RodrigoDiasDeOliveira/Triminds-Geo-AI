@@ -2,6 +2,7 @@
 Teste de Integração End-to-End do Fluxo Completo
 """
 import pytest
+
 from src.workflows.ingestion_pipeline import IngestionPipeline
 
 

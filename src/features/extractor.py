@@ -1,7 +1,9 @@
 # src/features/extractors.py
 import torch
+
 from ..ingestion.base import GeoAsset
 from .geo_feature import GeoFeature
+
 
 def embedding_to_feature(asset: GeoAsset) -> GeoFeature:
     """Converte embedding bruto em GeoFeature"""

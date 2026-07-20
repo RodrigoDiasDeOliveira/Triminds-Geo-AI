@@ -1,9 +1,11 @@
 # src/ingestion/base.py
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from typing import Dict, Any, Optional, List
 from pathlib import Path
+from typing import Any
+
 import torch
+
 
 @dataclass
 class GeoAsset:
@@ -11,20 +13,20 @@ class GeoAsset:
     provider: str
     asset_type: str
     timestamp: str
-    metadata: Dict
+    metadata: dict
     crs: str
     resolution: float
-    bbox: Optional[List] = None
+    bbox: list | None = None
 
 @dataclass
 class GeoFeature:
     geometry: Any
     timestamp: str
-    embedding: Optional[torch.Tensor] = None
-    properties: Dict = field(default_factory=dict)
+    embedding: torch.Tensor | None = None
+    properties: dict = field(default_factory=dict)
     source: str = ""
     confidence: float = 1.0
-    feature_id: Optional[str] = None
+    feature_id: str | None = None
 
 class GeoProvider(ABC):
     name: str
