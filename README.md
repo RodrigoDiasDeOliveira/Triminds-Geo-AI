@@ -1,14 +1,7 @@
-Triminds Geo AI
-Enterprise Geospatial AI Platform for Earth Observation, Remote Sensing and Satellite Intelligence
-
-Triminds Geo AI is an enterprise-grade cloud-native Artificial Intelligence platform designed to build, deploy and operate geospatial machine learning solutions at scale.
-
-The platform combines Computer Vision, Deep Learning, MLOps, and Google Cloud Platform to transform satellite imagery into actionable geospatial intelligence.
-
-Whether the goal is monitoring agricultural areas, detecting environmental changes, classifying land cover, or building custom Earth Observation solutions, Triminds Geo AI provides a modular architecture ready for production environments.
 
 
 <img width="1536" height="1024" alt="satelite" src="https://github.com/user-attachments/assets/291af6bb-21c5-437b-ab41-734048ddb39f" />
+
 
 
 
@@ -26,217 +19,324 @@ Built with PyTorch, MLOps practices, and GCP services (Vertex AI, Dataproc, BigQ
 
 Part of the Triminds Ecosystem
 
-Triminds Geo AI is one of the products that compose the Triminds Platform, sharing the same engineering principles:
+Unlike traditional satellite image classification projects, Triminds adopts a feature-first architecture, where multiple geospatial data sources are transformed into standardized feature representations that can be consumed by machine learning models, vector databases, and enterprise analytics platforms.
 
-- Modular Architecture
-- Cloud-Native Design
-- AI-First Development
-- Infrastructure as Code
-- Enterprise Security
-- MLOps Best Practices
-- Production-Ready Components
+The platform combines Deep Learning, Computer Vision, Foundation Models, MLOps, Google Earth Engine, and Google Cloud Platform into a modular ecosystem ready for production environments.
 
 # 🚀 Project Goals
 
-- Build high-performance land cover classification models
-- Compare CNNs, Vision Transformers, and Hybrid architectures
-- Create scalable geospatial ML pipelines
-- Build a clean, modular, and maintainable codebase
-- Prepare scalable data pipelines for large satellite datasets
-- Integrate with Google Cloud Platform (Vertex AI + Dataproc)
-- Implement full MLOps lifecycle (train → track → deploy → monitor → retrain)
+The long-term vision is to build an open and extensible ecosystem for enterprise Artificial Intelligence, where geospatial intelligence becomes a first-class component alongside conversational AI, computer vision, data platforms and cloud-native applications.
 
 ---
 
 # 🧠 Core Capabilities
 
-## 🔬 Machine Learning
-- CNN models (ResNet, EfficientNet)
-- Vision Transformers (ViT, Swin Transformer)
-- Hybrid CNN + Transformer architecture
-- Custom model factory system
-- Training pipeline with PyTorch
+Vision
 
-## 🌍 Geospatial Intelligence
-- Satellite image preprocessing
-- Geo-aware utilities
-- Raster and coordinate handling
-- Ready for multi-spectral extension (Sentinel-2)
+Build an open, extensible and production-ready platform capable of transforming heterogeneous Earth Observation data into actionable geospatial intelligence.
 
-## ⚙️ MLOps System
-- MLflow experiment tracking
-- Model registry system
-- Experiment tracking module
-- Structured logging system
-- Dataproc orchestration jobs
+Triminds Geo AI is designed to support:
 
-## 📊 Monitoring System
-- Data drift detection (KS test)
-- Model drift detection
-- Performance monitoring
-- Drift aggregation system
-- Auto-retraining trigger design
+🌱 Precision Agriculture
+🌍 Environmental Monitoring
+🛰️ Satellite Intelligence
+🏙️ Smart Cities
+🌳 Forestry Analysis
+🌊 Water Resources Monitoring
+🔥 Disaster Assessment
+📈 Spatial Analytics
+🤖 Foundation Models for Remote Sensing
+✨ Key Features
+🌎 Multi-Provider Earth Observation
 
-## ☁️ Cloud Infrastructure (GCP)
+Triminds was designed around the concept of Geo Providers, allowing different satellite and geospatial data sources to be integrated through a common interface.
 
-Integrated with Google Cloud Platform:
+Current and planned providers include:
 
-- Vertex AI (training + deployment)
-- Dataproc (Spark distributed processing)
-- Cloud Storage (datasets)
-- BigQuery GIS (geospatial analytics)
-- Terraform (infra-as-code)
+Provider	Status
+Google Satellite Embedding V1 Annual	✅
+Sentinel-2	🚧
+Landsat	🚧
+Planet Labs	📋 Planned
+Maxar	📋 Planned
+Drone Imagery	📋 Planned
+LiDAR	📋 Planned
+🧠 Geo Feature Engine
 
----
+The GeoFeatureEngine is the core component of Triminds.
 
-# 🏗️ Architecture Overview
+Instead of coupling machine learning models directly to satellite imagery, the platform converts geospatial assets into reusable feature representations.
 
-## System Layers
+Earth Observation Sources
+        │
+        ├── Google Satellite Embedding
+        ├── Sentinel-2
+        ├── Landsat
+        ├── Drone
+        └── Future Providers
+                │
+                ▼
+         Geo Provider Layer
+                │
+                ▼
+      Geo Ingestion Pipeline
+                │
+                ▼
+        Geo Feature Engine
+                │
+                ▼
+      Standard Feature Objects
+                │
+      ┌─────────┴──────────┐
+      ▼                    ▼
+Vector Store         Deep Learning
+(pgvector/Qdrant)    CNN / ViT / Hybrid
 
-```text
-DATA LAYER
-  ├── data_loader
-  ├── preprocessing
+This abstraction allows the same AI pipeline to consume different Earth Observation datasets without changing the downstream machine learning workflow.
+
+🏗 Platform Architecture
+DATA SOURCES
+│
+├── Google Earth Engine
+├── Google Satellite Embeddings
+├── Sentinel
+├── Landsat
+├── Drone Imagery
+└── Future Providers
+
+        │
+
+PROVIDER LAYER
+│
+├── GoogleEmbeddingProvider
+├── SentinelProvider
+├── LandsatProvider
+
+        │
+
+INGESTION LAYER
+│
+├── Export Manager
+├── Metadata
+├── Validation
+├── Dataset Builders
+
+        │
+
+FEATURE LAYER
+│
+├── GeoFeatureEngine
+├── Feature Extractors
+├── Feature Adapters
+└── Metadata Engine
+
+        │
+
+VECTOR LAYER
+│
+├── pgvector
+├── Qdrant
+├── Vertex AI Vector Search (future)
+
+        │
 
 MODEL LAYER
-  ├── CNN / ViT / Hybrid models
+│
+├── CNN
+├── Vision Transformer
+├── Swin Transformer
+├── Hybrid Models
 
-PIPELINE LAYER
-  ├── training_pipeline
-  ├── preprocessing_pipeline
-  ├── vertex_pipeline
+        │
 
-MLOps LAYER
-  ├── mlops/tracking
-  ├── mlops/registry
-  ├── mlops/orchestration
-  ├── mlops/logging
+MLOPS
+│
+├── MLflow
+├── Model Registry
+├── Experiment Tracking
+├── Drift Monitoring
 
-MONITORING LAYER
-  ├── data_drift
-  ├── model_drift
-  ├── performance_monitor
+        │
 
-CLOUD LAYER
-  ├── gcp/dataproc
-  ├── gcp/vertex_ai
-  ├── gcp/bigquery
-  ├── gcp/terraform
-``` id="arch1"
+DEPLOYMENT
+│
+├── FastAPI
+├── Vertex AI
+├── Docker
+└── Kubernetes (future)
+🤖 AI Models
 
----
+Triminds currently supports multiple Deep Learning architectures.
 
-# 🔄 System Workflow
+CNN
+ResNet
+EfficientNet
+Vision Transformers
+Vision Transformer (ViT)
+Swin Transformer
+Hybrid Models
+CNN + Transformer
 
-```text id="flow1"
-Satellite Images
-      ↓
-Data Ingestion (GeoTIFF / Raster)
-      ↓
-Preprocessing Pipeline
-      ↓
-Dataset Loader
-      ↓
-Model Training (CNN / ViT / Hybrid)
-      ↓
+The architecture also includes an Embedding Adapter, enabling foundation-model embeddings (64-band tensors) to be consumed by traditional CNN backbones.
+
+🌍 Geospatial Capabilities
+Google Earth Engine integration
+Google Satellite Embedding support
+GeoTIFF processing
+Cloud Optimized GeoTIFF (COG)
+Raster preprocessing
+Coordinate transformations
+Multi-spectral support
+Embedding-based workflows
+Metadata generation
+Extensible provider architecture
+⚙️ MLOps Platform
+
+Triminds includes a complete MLOps stack.
+
+Experiment Management
 MLflow Tracking
-      ↓
+Experiment Registry
+Artifact Management
+Model Lifecycle
 Model Registry
-      ↓
+Versioning
+Deployment
+Monitoring
+Data Drift
+Model Drift
+Performance Monitoring
+☁️ Google Cloud Integration
+
+Native support for Google Cloud services.
+
+Vertex AI
+Dataproc
+Cloud Storage
+BigQuery GIS
+Google Earth Engine
+Terraform Infrastructure
+🔄 End-to-End Workflow
+Earth Observation Data
+        │
+        ▼
+Geo Provider
+        │
+        ▼
+Geo Ingestion
+        │
+        ▼
+Geo Feature Engine
+        │
+        ▼
+Feature Extraction
+        │
+        ▼
+Vector Store
+        │
+        ▼
+Deep Learning Models
+        │
+        ▼
+MLflow Tracking
+        │
+        ▼
+Model Registry
+        │
+        ▼
 Vertex AI Deployment
-      ↓
-Monitoring Layer
-      ↓
-Auto-Retraining (Dataproc + Vertex AI Pipelines)
-🌐 API
+        │
+        ▼
+Monitoring & Retraining
+🌐 REST API
 
 FastAPI-based inference service.
 
-Endpoint
 POST /predict
 
-Upload a satellite image and receive a classification.
+Upload a GeoTIFF or supported image asset and receive AI predictions.
 
-curl -X POST "http://localhost:8000/predict" \
--F "file=@image.jpg"
-Response
-{
-  "prediction": 2
-}
-Health Check
-{
-  "status": "ok"
-}
 🧪 Testing Strategy
 
-The project includes 3 levels of testing:
+The project follows a multi-layer testing strategy.
 
 Unit Tests
 Models
+Features
 Metrics
-Dataset
-Geospatial utilities
-MLOps components
+Data Loading
+Geospatial Utilities
 Integration Tests
-Training pipeline
-Vertex AI pipeline
-Dataproc jobs
-FastAPI endpoints
+Training Pipeline
+Ingestion Pipeline
+Vertex AI
+Google Cloud Components
+FastAPI
 Performance Tests
-Inference latency
-Memory usage
-Batch throughput
-🧪 Run Tests
-pytest tests/
-🐳 Docker
-docker build -t satellite-classification .
+Inference Latency
+Memory Usage
+Throughput
+Scalability
+🐳 Deployment
 
-docker run -p 8000:8000 satellite-classification
-🏋️ Training
-python src/pipelines/training_pipeline.py
-☁️ Cloud Stack
-Google Cloud Vertex AI
-Google Cloud Dataproc
-Google Cloud Storage
-BigQuery GIS
-Terraform Infrastructure
-📈 Supported Models
-ResNet50
-EfficientNet
-Vision Transformer (ViT)
-Swin Transformer
-CNN + Transformer Hybrid
-🔬 Future Enhancements
-ML
-Semantic segmentation (UNet, DeepLabV3)
+Supported deployment targets include:
+
+Docker
+Google Vertex AI
+Cloud Run
+Kubernetes (planned)
+📊 Roadmap
+Geo AI
+Multi-temporal embeddings
+Foundation Models
 Self-supervised learning
-Multi-spectral satellite support
+Semantic segmentation
+Multi-modal AI
 Geospatial
-Sentinel-2 ingestion pipeline
-Temporal satellite analysis
-Raster-based training pipeline
-MLOps
-Full CI/CD pipeline
-Shadow deployment testing
-Automated retraining system
+Sentinel-2
+Landsat
+Planet Labs
+Maxar
+Drone imagery
+LiDAR
+Vector Intelligence
+pgvector
+Qdrant
+Vertex AI Vector Search
+Semantic Search
 Cloud
-Kubernetes (GKE) deployment
-Streaming ingestion (Pub/Sub)
-Real-time inference 
+Kubernetes
+Event-driven ingestion
+Streaming pipelines
+Distributed training
+🧩 Design Principles
 
-🧠 Design Principles
-Modular architecture
-Separation of concerns (ML / MLOps / Monitoring / Infra)
-Cloud-native design
+Triminds follows modern software engineering practices.
+
+Modular Architecture
+Cloud Native Design
+AI-First Development
+Feature-First Architecture
+Provider-Based Extensibility
+Separation of Concerns
+Infrastructure as Code
 Reproducibility
-Production-first mindset
-Scalable pipeline architecture
-
-📊 Project Status
+Enterprise MLOps
+Production-Ready Components
+📈 Project Status
 
 🟢 Active Development
-Phase: MLOps + Cloud Integration Complete
-Next: Production deployment & advanced geospatial pipelines
+
+Current focus:
+
+Google Satellite Embedding integration
+Geo Feature Engine
+Multi-provider architecture
+Enterprise MLOps
+Production-ready geospatial pipelines
+
+
+
 
 📜 License
 
