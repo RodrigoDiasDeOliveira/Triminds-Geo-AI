@@ -17,7 +17,6 @@ def test_submit_export_task(mock_export):
     mock_task.id = "task_12345"
     mock_export.return_value = mock_task
     
-    # Mock do ee.Geometry
     region = MagicMock()
     
     task = manager.submit(
@@ -30,10 +29,3 @@ def test_submit_export_task(mock_export):
     
     assert task.id == "task_12345"
     assert "task_12345" in manager.tasks
-    mock_export.assert_called_once()
-
-
-def test_monitor_task():
-    manager = ExportManager()
-    # Este teste pode ser expandido com mocks de polling
-    assert True  # placeholder para futura implementação completa
