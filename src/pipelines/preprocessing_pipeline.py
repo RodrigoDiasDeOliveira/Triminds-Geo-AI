@@ -46,7 +46,6 @@ class PreprocessingPipeline:
         output_path=None,
     ):
         if input_path is not None:
-
             if output_path is not None:
                 self.output_dir = Path(output_path)
                 self.output_dir.mkdir(

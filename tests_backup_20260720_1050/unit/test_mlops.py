@@ -5,11 +5,7 @@ def test_model_registration():
 
     registry = ModelRegistry()
 
-    registry.register_model(
-        "test-model",
-        version=1,
-        metadata={"acc": 0.9}
-    )
+    registry.register_model("test-model", version=1, metadata={"acc": 0.9})
 
     models = registry.list_models("test-model")
 

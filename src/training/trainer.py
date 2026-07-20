@@ -9,7 +9,6 @@ from src.mlops.tracking.mlflow_logger import MLflowLogger
 
 
 class Trainer:
-
     def __init__(
         self,
         model,
@@ -63,7 +62,6 @@ class Trainer:
             desc="Training",
             leave=False,
         ):
-
             images = images.to(self.device)
             labels = labels.to(self.device)
 
@@ -113,13 +111,11 @@ class Trainer:
         all_labels = []
 
         with torch.no_grad():
-
             for images, labels in tqdm(
                 self.val_loader,
                 desc="Validating",
                 leave=False,
             ):
-
                 images = images.to(self.device)
                 labels = labels.to(self.device)
 
@@ -247,15 +243,12 @@ class Trainer:
         patience_counter = 0
 
         with self.mlflow.start_run():
-
             for epoch in range(epochs):
-
                 train_loss = self.train_epoch()
 
                 val_loss, metrics = self.validate()
 
                 if val_loss < best_val_loss:
-
                     best_val_loss = val_loss
                     patience_counter = 0
 

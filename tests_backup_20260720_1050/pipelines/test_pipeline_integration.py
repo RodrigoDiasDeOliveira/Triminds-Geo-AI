@@ -5,9 +5,7 @@ from src.pipelines.training_pipeline import run_training_pipeline
 def test_full_pipeline_flow():
     preprocessing = PreprocessingPipeline()
 
-    preprocessing.run(
-        input_path="data/raw/sample.jpg"
-    )
+    preprocessing.run(input_path="data/raw/sample.jpg")
 
     result = run_training_pipeline(
         config_path="config/config.yaml",

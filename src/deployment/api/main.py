@@ -36,7 +36,9 @@ MODEL_PATH = os.environ.get("MODEL_PATH", "artifacts/model.pth")
 MODEL_NAME = os.environ.get("MODEL_NAME", MODEL_CFG.get("name", "resnet50"))
 NUM_CLASSES = int(os.environ.get("NUM_CLASSES", DATA_CFG.get("num_classes", 10)))
 IN_CHANNELS = int(os.environ.get("IN_CHANNELS", MODEL_CFG.get("in_channels", 3)))
-USE_ADAPTER = os.environ.get("USE_ADAPTER", str(MODEL_CFG.get("use_adapter", False))).lower() == "true"
+USE_ADAPTER = (
+    os.environ.get("USE_ADAPTER", str(MODEL_CFG.get("use_adapter", False))).lower() == "true"
+)
 ADAPTER_OUT = int(MODEL_CFG.get("adapter_out_channels", 64))
 CLASS_NAMES: list[str] = DATASET_CFG.get("classes", []) or [str(i) for i in range(NUM_CLASSES)]
 

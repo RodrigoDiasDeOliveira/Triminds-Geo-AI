@@ -8,7 +8,6 @@ logger = setup_logger()
 
 
 class PreprocessingPipeline:
-
     def __init__(
         self,
         input_dir="data/raw",
@@ -37,7 +36,6 @@ class PreprocessingPipeline:
 
         # Caso o teste envie apenas uma imagem
         if input_path is not None:
-
             if output_path is not None:
                 self.output_dir = Path(output_path)
                 self.output_dir.mkdir(parents=True, exist_ok=True)
