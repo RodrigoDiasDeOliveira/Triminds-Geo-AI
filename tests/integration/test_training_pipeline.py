@@ -13,12 +13,12 @@ def test_config(tmp_path):
         "source": {
             "type": "embedding",
             "provider": "google_embedding",
-            "config": {"bucket_name": "test-bucket"}
+            "config": {"bucket_name": "test-bucket"},
         },
         "data": {
             "root_dir": str(tmp_path / "embeddings"),
             "year": 2023,
-            "dataloader": {"batch_size": 4, "num_workers": 0}
+            "dataloader": {"batch_size": 4, "num_workers": 0},
         },
         "model": {
             "name": "resnet50",
@@ -26,28 +26,25 @@ def test_config(tmp_path):
             "adapter_out_channels": 64,
             "in_channels": 64,
             "num_classes": 5,
-            "pretrained": False
+            "pretrained": False,
         },
-        "training": {
-            "num_epochs": 1,
-            "learning_rate": 0.001
-        }
+        "training": {"num_epochs": 1, "learning_rate": 0.001},
     }
-    
+
     config_path = tmp_path / "test_config.yaml"
     with open(config_path, "w") as f:
         yaml.dump(config, f)
-    
+
     return config_path
 
 
-@patch('src.features.engine.GeoFeatureEngine')
-@patch('src.pipelines.training_pipeline.GoogleEmbeddingDataset')
+@patch("src.features.engine.GeoFeatureEngine")
+@patch("src.pipelines.training_pipeline.GoogleEmbeddingDataset")
 def test_training_pipeline_smoke(mock_dataset, mock_engine, test_config, tmp_path):
     """Teste de fumaça - verifica se o pipeline roda sem erros graves"""
     mock_engine.return_value.process.return_value = []
     mock_dataset.return_value.__len__.return_value = 10
-    
+
     # Executa o pipeline
     try:
         main(str(test_config))

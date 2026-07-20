@@ -18,6 +18,7 @@ class GeoAsset:
     resolution: float
     bbox: list | None = None
 
+
 @dataclass
 class GeoFeature:
     geometry: Any
@@ -27,6 +28,7 @@ class GeoFeature:
     source: str = ""
     confidence: float = 1.0
     feature_id: str | None = None
+
 
 class GeoProvider(ABC):
     name: str

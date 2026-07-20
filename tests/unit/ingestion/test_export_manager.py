@@ -9,23 +9,23 @@ def test_export_manager_initialization():
     assert len(manager.tasks) == 0
 
 
-@patch('ee.batch.Export.image.toCloudStorage')
+@patch("ee.batch.Export.image.toCloudStorage")
 def test_submit_export_task(mock_export):
     manager = ExportManager()
-    
+
     mock_task = MagicMock()
     mock_task.id = "task_12345"
     mock_export.return_value = mock_task
-    
+
     region = MagicMock()
-    
+
     task = manager.submit(
         collection="GOOGLE/SATELLITE_EMBEDDING/V1/ANNUAL",
         year=2023,
         region=region,
         bucket="test-bucket",
-        prefix="embeddings/2023/"
+        prefix="embeddings/2023/",
     )
-    
+
     assert task.id == "task_12345"
     assert "task_12345" in manager.tasks

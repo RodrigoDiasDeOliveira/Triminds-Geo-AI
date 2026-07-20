@@ -42,9 +42,7 @@ def run_training_pipeline(
     model_cfg = cfg["model"]
     data_cfg = cfg["data"]
 
-    transform = default_transforms(
-        image_size=data_cfg["image_size"][0]
-    )
+    transform = default_transforms(image_size=data_cfg["image_size"][0])
 
     train_dataset = SatelliteDataset(
         data_path=data_cfg["train_dir"],
@@ -93,9 +91,7 @@ def run_training_pipeline(
     except Exception:
         optimizer = None
 
-    device = torch.device(
-        "cuda" if torch.cuda.is_available() else "cpu"
-    )
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     trainer = Trainer(
         model=model,
@@ -107,11 +103,7 @@ def run_training_pipeline(
         config=cfg,
     )
 
-    num_epochs = (
-        epochs
-        if epochs is not None
-        else training_cfg["num_epochs"]
-    )
+    num_epochs = epochs if epochs is not None else training_cfg["num_epochs"]
 
     # <<< ALTERAÇÃO PARA O TESTE >>>
     trainer.train(epochs=num_epochs)

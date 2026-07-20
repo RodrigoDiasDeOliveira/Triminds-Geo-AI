@@ -5,8 +5,6 @@ def test_experiment_tracking():
 
     tracker = ExperimentTracker()
 
-    experiment_id = tracker.create_experiment(
-        "satellite-test"
-    )
+    experiment_id = tracker.create_experiment("satellite-test")
 
     assert experiment_id is not None

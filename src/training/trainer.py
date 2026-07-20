@@ -72,10 +72,7 @@ class Trainer:
             #
             # Compatibilidade com testes unitários
             #
-            if (
-                hasattr(self.model, "in_features")
-                and images.ndim > 2
-            ):
+            if hasattr(self.model, "in_features") and images.ndim > 2:
                 images = images.view(
                     images.size(0),
                     -1,
@@ -126,10 +123,7 @@ class Trainer:
                 images = images.to(self.device)
                 labels = labels.to(self.device)
 
-                if (
-                    hasattr(self.model, "in_features")
-                    and images.ndim > 2
-                ):
+                if hasattr(self.model, "in_features") and images.ndim > 2:
                     images = images.view(
                         images.size(0),
                         -1,
@@ -150,13 +144,9 @@ class Trainer:
 
                 total_loss += loss.item()
 
-                all_outputs.append(
-                    outputs.cpu()
-                )
+                all_outputs.append(outputs.cpu())
 
-                all_labels.append(
-                    labels.cpu()
-                )
+                all_labels.append(labels.cpu())
 
         if not all_outputs:
             return 0.0, {
@@ -180,11 +170,11 @@ class Trainer:
         )
 
         return avg_loss, metrics
-    
+
     def _compute_metrics(
-         self,
-         outputs,
-         labels,
+        self,
+        outputs,
+        labels,
     ):
 
         from sklearn.metrics import (
@@ -194,17 +184,19 @@ class Trainer:
             recall_score,
         )
 
-        preds = torch.argmax(
-            outputs,
-            dim=1,
-        ).cpu().numpy()
+        preds = (
+            torch.argmax(
+                outputs,
+                dim=1,
+            )
+            .cpu()
+            .numpy()
+        )
 
         labels = labels.cpu().numpy()
 
         return {
-            "accuracy": float(
-                accuracy_score(labels, preds)
-            ),
+            "accuracy": float(accuracy_score(labels, preds)),
             "f1": float(
                 f1_score(
                     labels,
@@ -239,11 +231,7 @@ class Trainer:
         #
         # Compatibilidade com testes usando MagicMock
         #
-        if (
-            self.train_loader is None
-            or self.val_loader is None
-            or self.optimizer is None
-        ):
+        if self.train_loader is None or self.val_loader is None or self.optimizer is None:
             return
 
         best_val_loss = float("inf")
@@ -271,9 +259,7 @@ class Trainer:
                     best_val_loss = val_loss
                     patience_counter = 0
 
-                    self.save_model(
-                        "best_model.pth"
-                    )
+                    self.save_model("best_model.pth")
 
                 else:
                     patience_counter += 1
@@ -283,21 +269,15 @@ class Trainer:
                         "epoch": epoch,
                         "train_loss": train_loss,
                         "val_loss": val_loss,
-                        "val_accuracy": metrics[
-                            "accuracy"
-                        ],
-                        "val_f1": metrics[
-                            "f1"
-                        ],
+                        "val_accuracy": metrics["accuracy"],
+                        "val_f1": metrics["f1"],
                     }
                 )
 
                 if patience_counter >= patience:
                     break
 
-            self.save_model(
-                "model_final.pth"
-            )
+            self.save_model("model_final.pth")
 
             self.mlflow.log_model(
                 self.model,
@@ -319,10 +299,7 @@ class Trainer:
         filename,
     ):
 
-        model_path = (
-            self.artifacts_dir
-            / filename
-        )
+        model_path = self.artifacts_dir / filename
 
         torch.save(
             {

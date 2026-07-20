@@ -12,22 +12,22 @@ class GoogleEmbeddingProvider(GeoProvider):
     name = "google_embedding"
     provider_type = "embedding"
     collection_id = "GOOGLE/SATELLITE_EMBEDDING/V1/ANNUAL"
-    
+
     def __init__(self, bucket_name: str, project_id: str | None = None):
         self.bucket_name = bucket_name
         self.project_id = project_id
         self.export_manager = ExportManager()
         ee.Initialize(project=project_id)
-    
+
     def export(self, year: int, region: ee.Geometry, output_prefix: str = "embeddings", **kwargs):
         return self.export_manager.submit(
             collection=self.collection_id,
             year=year,
             region=region,
             bucket=self.bucket_name,
-            prefix=f"{output_prefix}/{year}/"
+            prefix=f"{output_prefix}/{year}/",
         )
-    
+
     def load_asset(self, asset_path: Path) -> GeoAsset:
         metadata = create_metadata(asset_path, self.name, year=2023)  # extrai do JSON se existir
         return GeoAsset(
@@ -37,10 +37,11 @@ class GoogleEmbeddingProvider(GeoProvider):
             timestamp=metadata["timestamp"],
             metadata=metadata,
             crs=metadata.get("crs", "EPSG:4326"),
-            resolution=10.0
+            resolution=10.0,
         )
-    
+
     def extract_features(self, asset: GeoAsset) -> GeoFeature:
         # Carrega embedding e converte para GeoFeature
         from ...features.extractors import embedding_to_feature
+
         return embedding_to_feature(asset)
