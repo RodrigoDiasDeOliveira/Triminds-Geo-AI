@@ -2,9 +2,9 @@ name: ML Pipeline CI
 
 on:
   push:
-    branches: [main]
+    branches: [ main, develop ]
   pull_request:
-    branches: [main]
+    branches: [ main ]
 
 jobs:
   test:
@@ -26,7 +26,8 @@ jobs:
           sudo apt-get install -y \
             gdal-bin libgdal-dev \
             libgl1 libglib2.0-0 libgomp1 \
-            libspatialindex-dev
+            libspatialindex-dev \
+            libproj-dev
 
       - name: Upgrade pip
         run: pip install --upgrade pip
@@ -37,13 +38,36 @@ jobs:
             --index-url https://download.pytorch.org/whl/cpu
 
       - name: Install project dependencies
-        run: pip install -r requirements.txt
+        run: |
+          pip install -r requirements.txt
+          # Instala dependências extras se necessário
+          if [ -f requirements-extra.txt ]; then
+            pip install -r requirements-extra.txt
+          fi
 
-      - name: Install lint tools
-        run: pip install ruff==0.6.9
+      - name: Install lint and test tools
+        run: |
+          pip install ruff==0.6.9 pytest-cov pytest-mock
 
       - name: Lint with Ruff
         run: ruff check src tests --output-format=github
 
-      - name: Run tests
-        run: pytest tests/ -q --cov=src --cov-report=term-missing
+      - name: Run Unit Tests
+        run: pytest tests/unit/ -q --cov=src --cov-report=term-missing
+
+      - name: Run Integration Tests
+        run: pytest tests/integration/ -q --cov=src --cov-append
+
+      - name: Run Model & Feature Tests
+        run: pytest tests/unit/features/ tests/unit/models/ tests/unit/ingestion/ -q
+
+      - name: Upload coverage to Codecov (opcional)
+        if: github.repository == 'RodrigoDiasDeOliveira/Triminds-Geo-AI'
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+  # Job opcional: Lint + Type Check (futuro)
+  # lint:
+  #   runs-on: ubuntu-latest
+  #   ...
