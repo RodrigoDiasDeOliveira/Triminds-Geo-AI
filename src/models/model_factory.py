@@ -3,14 +3,13 @@ Model Factory - Centralized model creation
 Supports: ResNet, EfficientNet, ViT, Swin Transformer, Hybrid + Embedding Adapters
 """
 
-from src.models.cnn.resnet_model import build_resnet
-from src.models.cnn.efficientnet_model import build_efficientnet
-from src.models.vit.vit_model import build_vit
-from src.models.vit.swin_transformer import build_swin_transformer
-from src.models.hybrid.cnn_transformer_hybrid import CNNTransformerHybrid
-
 # Import do novo adapter
 from src.features.adapter import get_adapter
+from src.models.cnn.efficientnet_model import build_efficientnet
+from src.models.cnn.resnet_model import build_resnet
+from src.models.hybrid.cnn_transformer_hybrid import CNNTransformerHybrid
+from src.models.vit.swin_transformer import build_swin_transformer
+from src.models.vit.vit_model import build_vit
 
 
 def build_model(

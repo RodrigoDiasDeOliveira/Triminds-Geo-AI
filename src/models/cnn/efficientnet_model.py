@@ -1,5 +1,5 @@
-from torchvision.models import efficientnet_b0, EfficientNet_B0_Weights
 import torch.nn as nn
+from torchvision.models import EfficientNet_B0_Weights, efficientnet_b0
 
 
 def build_efficientnet(

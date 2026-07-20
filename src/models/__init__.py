@@ -1,12 +1,12 @@
 # src/models/__init__.py
-from .model_factory import build_model
+from .cnn.efficientnet_model import build_efficientnet
 
 # Exportar modelos principais
 from .cnn.resnet_model import build_resnet
-from .cnn.efficientnet_model import build_efficientnet
-from .vit.vit_model import build_vit
-from .vit.swin_transformer import build_swin_transformer
 from .hybrid.cnn_transformer_hybrid import CNNTransformerHybrid
+from .model_factory import build_model
+from .vit.swin_transformer import build_swin_transformer
+from .vit.vit_model import build_vit
 
 __all__ = [
     "build_model",
