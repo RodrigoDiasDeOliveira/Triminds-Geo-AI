@@ -12,6 +12,7 @@ pyproj==3.6.1
 numpy==1.26.4
 pandas==2.2.2
 pillow==10.4.0
+psycopg2-binary>=2.9
 
 # ML & Utils
 scikit-learn==1.5.2
