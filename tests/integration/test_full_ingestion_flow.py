@@ -7,9 +7,7 @@ import pytest
 from src.workflows.ingestion_pipeline import IngestionPipeline
 
 
-@pytest.mark.skip(
-    reason="Temporariamente desabilitado: requer PostgreSQL/VectorStore configurado."
-)
+@pytest.mark.skip(reason="Temporariamente desabilitado: requer PostgreSQL/VectorStore configurado.")
 @pytest.mark.integration
 def test_full_ingestion_to_vectorstore_flow():
     """Testa do export até salvar no vector store."""

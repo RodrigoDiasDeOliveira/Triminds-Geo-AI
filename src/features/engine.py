@@ -32,9 +32,7 @@ class GeoFeatureEngine:
 
         if provider_name not in self.providers:
             provider_cls = ProviderRegistry.get(provider_name)
-            provider = provider_cls(
-                **config["source"].get("config", {})
-            )
+            provider = provider_cls(**config["source"].get("config", {}))
             self.register_provider(provider_name, provider)
         else:
             provider = self.providers[provider_name]
@@ -42,9 +40,7 @@ class GeoFeatureEngine:
         if config.get("export"):
             provider.export(**config["export"])
 
-        asset = provider.load_asset(
-            Path(config["data"]["root_dir"])
-        )
+        asset = provider.load_asset(Path(config["data"]["root_dir"]))
 
         features = provider.extract_features(asset)
 

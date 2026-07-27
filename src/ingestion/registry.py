@@ -29,8 +29,7 @@ class ProviderRegistry:
         """Return a registered provider."""
         if name not in cls._providers:
             raise ValueError(
-                f"Provider '{name}' não encontrado. "
-                f"Registrados: {list(cls._providers)}"
+                f"Provider '{name}' não encontrado. Registrados: {list(cls._providers)}"
             )
 
         return cls._providers[name]
@@ -38,7 +37,4 @@ class ProviderRegistry:
     @classmethod
     def list_providers(cls) -> dict[str, str]:
         """Return registered provider names."""
-        return {
-            name: provider.__name__
-            for name, provider in cls._providers.items()
-        }
+        return {name: provider.__name__ for name, provider in cls._providers.items()}

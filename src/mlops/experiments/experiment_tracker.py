@@ -13,9 +13,7 @@ class ExperimentTracker:
 
     def create_experiment(self, name: str) -> str:
         """Create a new experiment directory and return its identifier."""
-        experiment_id = (
-            f"{name}_{datetime.now(UTC).strftime('%Y%m%d_%H%M%S')}"
-        )
+        experiment_id = f"{name}_{datetime.now(UTC).strftime('%Y%m%d_%H%M%S')}"
 
         (self.base_path / experiment_id).mkdir(
             parents=True,

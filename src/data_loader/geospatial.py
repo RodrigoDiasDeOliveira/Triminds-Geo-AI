@@ -74,9 +74,7 @@ class GeoSpatial:
                 }
 
         except rasterio.errors.RasterioIOError as err:
-            raise RuntimeError(
-                f"Failed to read raster metadata from '{image_path}'."
-            ) from err
+            raise RuntimeError(f"Failed to read raster metadata from '{image_path}'.") from err
 
     def extract_patch_coordinates(self, image_path: str) -> dict | None:
         """

@@ -40,9 +40,7 @@ class VectorStoreClient:
             SET embedding = EXCLUDED.embedding,
                 metadata = EXCLUDED.metadata
             """
-        ).format(
-            sql.Identifier(self.table)
-        )
+        ).format(sql.Identifier(self.table))
 
         with psycopg2.connect(self.conn_str) as conn:
             with conn.cursor() as cur:

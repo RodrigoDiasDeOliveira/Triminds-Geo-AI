@@ -87,9 +87,7 @@ def get_adapter(
             bottleneck_dim=bottleneck_dim,
         )
 
-    raise ValueError(
-        f"Unknown adapter type: {adapter_type}"
-    )
+    raise ValueError(f"Unknown adapter type: {adapter_type}")
 
 
 __all__ = [

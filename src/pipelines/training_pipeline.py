@@ -147,9 +147,7 @@ def run_training_pipeline(
         val_loader=val_loader,
         criterion=criterion,
         optimizer=optimizer,
-        device=torch.device(
-            "cuda" if torch.cuda.is_available() else "cpu"
-        ),
+        device=torch.device("cuda" if torch.cuda.is_available() else "cpu"),
         config=cfg,
     )
 
