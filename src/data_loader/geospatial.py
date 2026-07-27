@@ -1,6 +1,10 @@
+import logging
+
 import numpy as np
 import rasterio
 from pyproj import Geod
+
+logger = logging.getLogger(__name__)
 
 
 class GeoSpatial:
@@ -19,7 +23,8 @@ class GeoSpatial:
         return np.array([norm_lat, norm_lon])
 
     def calculate_patch_center(
-        self, bbox: tuple[float, float, float, float]
+        self,
+        bbox: tuple[float, float, float, float],
     ) -> tuple[float, float]:
         """
         Calculate the center of a bounding box.
@@ -31,8 +36,10 @@ class GeoSpatial:
             (latitude, longitude)
         """
         min_lat, min_lon, max_lat, max_lon = bbox
+
         center_lat = (min_lat + max_lat) / 2
         center_lon = (min_lon + max_lon) / 2
+
         return center_lat, center_lon
 
     def compute_distance(
@@ -47,6 +54,7 @@ class GeoSpatial:
         lat2, lon2 = point2
 
         _, _, distance = self.geod.inv(lon1, lat1, lon2, lat2)
+
         return distance
 
     def get_raster_metadata(self, image_path: str) -> dict:
@@ -64,8 +72,11 @@ class GeoSpatial:
                     "count": src.count,
                     "driver": src.driver,
                 }
-        except Exception as err:
-            raise RuntimeError(f"Failed to read raster metadata from {image_path}: {err}") from err
+
+        except rasterio.errors.RasterioIOError as err:
+            raise RuntimeError(
+                f"Failed to read raster metadata from '{image_path}'."
+            ) from err
 
     def extract_patch_coordinates(self, image_path: str) -> dict | None:
         """
@@ -73,10 +84,16 @@ class GeoSpatial:
         """
         try:
             metadata = self.get_raster_metadata(image_path)
+
             bounds = metadata["bounds"]
 
             center = self.calculate_patch_center(
-                (bounds.bottom, bounds.left, bounds.top, bounds.right)
+                (
+                    bounds.bottom,
+                    bounds.left,
+                    bounds.top,
+                    bounds.right,
+                )
             )
 
             return {
@@ -90,7 +107,12 @@ class GeoSpatial:
                 "crs": metadata["crs"],
             }
 
-        except Exception:
+        except RuntimeError as err:
+            logger.warning(
+                "Unable to extract coordinates from '%s': %s",
+                image_path,
+                err,
+            )
             return None
 
 

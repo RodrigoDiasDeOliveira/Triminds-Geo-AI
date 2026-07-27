@@ -1,4 +1,6 @@
 # src/features/engine.py
+from __future__ import annotations
+
 from pathlib import Path
 from typing import Any
 
@@ -7,34 +9,59 @@ from .geo_feature import GeoFeature
 
 
 class GeoFeatureEngine:
-    """Coração do Triminds - transforma GeoAssets em GeoFeatures"""
+    """
+    Core engine responsável por transformar GeoAssets em GeoFeatures.
+    """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.providers: dict[str, Any] = {}
 
     def register_provider(self, name: str, provider: Any) -> None:
-        """Registra um provider no engine"""
+        """
+        Registra uma instância de provider.
+        """
         ProviderRegistry.register(name, type(provider))
         self.providers[name] = provider
 
-    def process(self, config: dict) -> list[GeoFeature]:
-        """Processa do source até gerar features"""
+    def process(self, config: dict[str, Any]) -> list[GeoFeature]:
+        """
+        Executa todo o fluxo de ingestão.
+        """
+
         provider_name = config["source"]["provider"]
 
-        # Recupera ou cria o provider
         if provider_name not in self.providers:
-            provider_class = ProviderRegistry.get(provider_name)
-            provider = provider_class(**config["source"].get("config", {}))
+            provider_cls = ProviderRegistry.get(provider_name)
+            provider = provider_cls(
+                **config["source"].get("config", {})
+            )
             self.register_provider(provider_name, provider)
         else:
             provider = self.providers[provider_name]
 
-        # Export (se necessário)
-        if "export" in config:
-            _ = provider.export(**config["export"])  # task não usado aqui
+        if config.get("export"):
+            provider.export(**config["export"])
 
-        # Carrega asset e extrai features
-        asset = provider.load_asset(Path(config["data"]["root_dir"]))
+        asset = provider.load_asset(
+            Path(config["data"]["root_dir"])
+        )
+
         features = provider.extract_features(asset)
 
-        return [features] if not isinstance(features, list) else features
+        if isinstance(features, list):
+            return features
+
+        return [features]
+
+    # ---------------------------------------------------
+    # Compatibilidade com os testes
+    # ---------------------------------------------------
+
+    def ingest_and_extract(
+        self,
+        config: dict[str, Any],
+    ) -> list[GeoFeature]:
+        """
+        Alias utilizado pelos testes de integração.
+        """
+        return self.process(config)

@@ -6,7 +6,7 @@ Criação e gerenciamento de metadados para assets geoespaciais.
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -38,7 +38,7 @@ def create_metadata(
         "filename": asset_path.name,
         "provider": provider,
         "year": year,
-        "timestamp": datetime.utcnow().isoformat(),
+        "timestamp": datetime.now(UTC).isoformat(),
         "crs": "EPSG:4326",
     }
 
