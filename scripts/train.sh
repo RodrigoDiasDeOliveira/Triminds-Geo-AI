@@ -10,6 +10,11 @@ fi
 
 export PYTHONPATH="$(pwd)"
 
+if [[ "$CONFIG_PATH" == "config/demo.yaml" && ! -d "data/demo/train" ]]; then
+  echo "Demo dataset not found; creating synthetic dataset..."
+  python scripts/create_demo_dataset.py
+fi
+
 echo "========================================"
 echo "Starting Training Pipeline"
 echo "Config: $CONFIG_PATH"
