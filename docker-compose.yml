@@ -1,6 +1,7 @@
 services:
   mlflow:
     image: ghcr.io/mlflow/mlflow:v2.16.2
+    profiles: ["mlflow"]
     ports:
       - "5000:5000"
     command: mlflow server --host 0.0.0.0 --backend-store-uri /mlruns --default-artifact-root /artifacts
@@ -12,28 +13,19 @@ services:
     build: .
     ports:
       - "8000:8000"
-    depends_on:
-      - mlflow
-    env_file:
-      - .env
     environment:
-      MLFLOW_TRACKING_URI: http://mlflow:5000
-      MODEL_REQUIRED: "false"
+      CONFIG_PATH: config/demo.yaml
+      MODEL_REQUIRED: "true"
+      MODEL_PATH: artifacts/best_model.pth
     volumes:
       - ./data:/app/data
       - ./artifacts:/app/artifacts
       - ./config:/app/config
 
   training:
-    build: .
     profiles: ["training"]
+    build: .
     command: ["python", "-m", "src.pipelines.training_pipeline", "--config", "config/demo.yaml"]
-    depends_on:
-      - mlflow
-    env_file:
-      - .env
-    environment:
-      MLFLOW_TRACKING_URI: http://mlflow:5000
     volumes:
       - ./data:/app/data
       - ./artifacts:/app/artifacts
