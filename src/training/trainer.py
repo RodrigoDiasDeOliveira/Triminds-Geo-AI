@@ -166,11 +166,7 @@ class Trainer:
 
     def train(self, epochs: int):
         # Compatibility with tests using lightweight mocks.
-        if (
-            self.train_loader is None
-            or self.val_loader is None
-            or self.optimizer is None
-        ):
+        if self.train_loader is None or self.val_loader is None or self.optimizer is None:
             return
 
         best_val_loss = float("inf")
@@ -238,9 +234,7 @@ class Trainer:
             ),
             in_channels=int(model_cfg.get("in_channels", 3)),
             use_adapter=bool(model_cfg.get("use_adapter", False)),
-            adapter_out_channels=int(
-                model_cfg.get("adapter_out_channels", 64)
-            ),
+            adapter_out_channels=int(model_cfg.get("adapter_out_channels", 64)),
             config=self.config,
         )
 
