@@ -1,6 +1,5 @@
 import io
 
-import torch
 from fastapi.testclient import TestClient
 from PIL import Image
 from torch import nn
