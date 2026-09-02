@@ -1,0 +1,55 @@
+# Triminds Geo AI - Local Demo Configuration
+# Validated path: RGB images -> ResNet50 -> checkpoint -> API
+
+project:
+  name: "Triminds Geo AI Demo"
+  version: "0.2.0"
+  random_seed: 42
+
+source:
+  type: "raster"
+  provider: "local"
+  config: {}
+
+data:
+  root_dir: "data/demo"
+  image_size: [224, 224]
+  channels: 3
+  num_classes: 10
+  normalize: true
+  dataloader:
+    batch_size: 8
+    num_workers: 0
+    shuffle: true
+    pin_memory: false
+    drop_last: false
+
+dataset:
+  name: "LocalRGBDemo"
+  preprocessing:
+    normalize: true
+    augmentation: false
+
+model:
+  name: "resnet50"
+  pretrained: false
+  use_adapter: false
+  adapter_out_channels: 64
+  in_channels: 3
+  dropout: 0.0
+  freeze_backbone: false
+
+training:
+  num_epochs: 1
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  batch_size: 8
+  num_workers: 0
+  early_stopping_patience: 3
+
+paths:
+  artifacts_dir: "artifacts"
+
+logging:
+  level: "INFO"
+  use_mlflow: false
