@@ -3,7 +3,7 @@ name: ML Pipeline CI
 on:
   workflow_dispatch:
   push:
-    branches: [main, develop]
+    branches: [main, develop, audit/production-readiness-phase1]
   pull_request:
     branches: [main]
 
