@@ -19,7 +19,7 @@ COPY requirements.txt pyproject.toml ./
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
 COPY . .
-RUN pip install -e . || true
+RUN pip install -e .
 
 EXPOSE 8000
 
