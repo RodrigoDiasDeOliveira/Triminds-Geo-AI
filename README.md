@@ -42,7 +42,16 @@ bash scripts/train.sh config/your-config.yaml
 
 ### 3. Start the API
 
+The demo checkpoint was trained with `config/demo.yaml`, so the API must use the same configuration:
+
 ```bash
+CONFIG_PATH=config/demo.yaml uvicorn src.deployment.api.main:app --host 0.0.0.0 --port 8000
+```
+
+On Windows PowerShell:
+
+```powershell
+$env:CONFIG_PATH="config/demo.yaml"
 uvicorn src.deployment.api.main:app --host 0.0.0.0 --port 8000
 ```
 
