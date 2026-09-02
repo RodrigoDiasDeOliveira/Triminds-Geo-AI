@@ -6,6 +6,7 @@ from tqdm import tqdm
 from src.mlops.logging.logger import Logger
 from src.mlops.registry.model_registry import ModelRegistry
 from src.mlops.tracking.mlflow_logger import MLflowLogger
+from src.models.checkpoint import save_checkpoint
 
 
 class Trainer:
@@ -52,9 +53,7 @@ class Trainer:
         )
 
     def train_epoch(self):
-
         self.model.train()
-
         total_loss = 0.0
 
         for images, labels in tqdm(
@@ -67,28 +66,14 @@ class Trainer:
 
             self.optimizer.zero_grad()
 
-            #
-            # Compatibilidade com testes unitários
-            #
+            # Compatibility with lightweight test models.
             if hasattr(self.model, "in_features") and images.ndim > 2:
-                images = images.view(
-                    images.size(0),
-                    -1,
-                )
-
+                images = images.view(images.size(0), -1)
                 if images.size(1) != self.model.in_features:
-                    images = images[
-                        :,
-                        : self.model.in_features,
-                    ]
+                    images = images[:, : self.model.in_features]
 
             outputs = self.model(images)
-
-            loss = self.criterion(
-                outputs,
-                labels,
-            )
-
+            loss = self.criterion(outputs, labels)
             loss.backward()
 
             if self.optimizer is not None:
@@ -96,17 +81,11 @@ class Trainer:
 
             total_loss += loss.item()
 
-        return total_loss / max(
-            len(self.train_loader),
-            1,
-        )
+        return total_loss / max(len(self.train_loader), 1)
 
     def validate(self):
-
         self.model.eval()
-
         total_loss = 0.0
-
         all_outputs = []
         all_labels = []
 
@@ -120,28 +99,14 @@ class Trainer:
                 labels = labels.to(self.device)
 
                 if hasattr(self.model, "in_features") and images.ndim > 2:
-                    images = images.view(
-                        images.size(0),
-                        -1,
-                    )
-
+                    images = images.view(images.size(0), -1)
                     if images.size(1) != self.model.in_features:
-                        images = images[
-                            :,
-                            : self.model.in_features,
-                        ]
+                        images = images[:, : self.model.in_features]
 
                 outputs = self.model(images)
-
-                loss = self.criterion(
-                    outputs,
-                    labels,
-                )
-
+                loss = self.criterion(outputs, labels)
                 total_loss += loss.item()
-
                 all_outputs.append(outputs.cpu())
-
                 all_labels.append(labels.cpu())
 
         if not all_outputs:
@@ -154,25 +119,11 @@ class Trainer:
 
         all_outputs = torch.cat(all_outputs)
         all_labels = torch.cat(all_labels)
+        avg_loss = total_loss / max(len(self.val_loader), 1)
 
-        avg_loss = total_loss / max(
-            len(self.val_loader),
-            1,
-        )
+        return avg_loss, self._compute_metrics(all_outputs, all_labels)
 
-        metrics = self._compute_metrics(
-            all_outputs,
-            all_labels,
-        )
-
-        return avg_loss, metrics
-
-    def _compute_metrics(
-        self,
-        outputs,
-        labels,
-    ):
-
+    def _compute_metrics(self, outputs, labels):
         from sklearn.metrics import (
             accuracy_score,
             f1_score,
@@ -180,15 +131,7 @@ class Trainer:
             recall_score,
         )
 
-        preds = (
-            torch.argmax(
-                outputs,
-                dim=1,
-            )
-            .cpu()
-            .numpy()
-        )
-
+        preds = torch.argmax(outputs, dim=1).cpu().numpy()
         labels = labels.cpu().numpy()
 
         return {
@@ -219,41 +162,31 @@ class Trainer:
             ),
         }
 
-    def train(
-        self,
-        epochs: int,
-    ):
-
-        #
-        # Compatibilidade com testes usando MagicMock
-        #
-        if self.train_loader is None or self.val_loader is None or self.optimizer is None:
+    def train(self, epochs: int):
+        # Compatibility with tests using lightweight mocks.
+        if (
+            self.train_loader is None
+            or self.val_loader is None
+            or self.optimizer is None
+        ):
             return
 
         best_val_loss = float("inf")
-
-        patience = self.config.get(
-            "training",
-            {},
-        ).get(
+        patience = self.config.get("training", {}).get(
             "early_stopping_patience",
             8,
         )
-
         patience_counter = 0
 
         with self.mlflow.start_run():
             for epoch in range(epochs):
                 train_loss = self.train_epoch()
-
                 val_loss, metrics = self.validate()
 
                 if val_loss < best_val_loss:
                     best_val_loss = val_loss
                     patience_counter = 0
-
                     self.save_model("best_model.pth")
-
                 else:
                     patience_counter += 1
 
@@ -271,12 +204,7 @@ class Trainer:
                     break
 
             self.save_model("model_final.pth")
-
-            self.mlflow.log_model(
-                self.model,
-                "model",
-            )
-
+            self.mlflow.log_model(self.model, "model")
             self.registry.register_model(
                 model_name="satellite-model",
                 version=1,
@@ -287,19 +215,27 @@ class Trainer:
                 },
             )
 
-    def save_model(
-        self,
-        filename,
-    ):
-
+    def save_model(self, filename):
+        model_cfg = self.config.get("model", {})
+        data_cfg = self.config.get("data", {})
         model_path = self.artifacts_dir / filename
 
-        torch.save(
-            {
-                "model_state_dict": self.model.state_dict(),
-                "config": self.config,
-            },
+        save_checkpoint(
             model_path,
+            self.model,
+            model_name=model_cfg.get("name", "unknown"),
+            num_classes=int(
+                data_cfg.get(
+                    "num_classes",
+                    model_cfg.get("num_classes", 10),
+                )
+            ),
+            in_channels=int(model_cfg.get("in_channels", 3)),
+            use_adapter=bool(model_cfg.get("use_adapter", False)),
+            adapter_out_channels=int(
+                model_cfg.get("adapter_out_channels", 64)
+            ),
+            config=self.config,
         )
 
         return model_path
