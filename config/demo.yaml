@@ -1,5 +1,6 @@
 # Triminds Geo AI - Local Demo Configuration
-# Validated path: RGB images -> ResNet50 -> checkpoint -> API
+# Validated path: synthetic RGB images -> ResNet50 -> checkpoint -> API
+# The demo dataset is synthetic and validates the software lifecycle only.
 
 project:
   name: "Triminds Geo AI Demo"
@@ -12,7 +13,9 @@ source:
   config: {}
 
 data:
-  root_dir: "data/demo"
+  root_dir: "data/demo/train"
+  train_dir: "data/demo/train"
+  val_dir: "data/demo/val"
   image_size: [224, 224]
   channels: 3
   num_classes: 10
