@@ -29,6 +29,8 @@ class Trainer:
         self.config = config or {}
 
         self.logger = Logger()
+        logging_cfg = self.config.get("logging", {})
+        self.use_mlflow = bool(logging_cfg.get("use_mlflow", True))
         self.mlflow = MLflowLogger(
             self.config.get(
                 "experiment_name",
@@ -164,11 +166,7 @@ class Trainer:
 
     def train(self, epochs: int):
         # Compatibility with tests using lightweight mocks.
-        if (
-            self.train_loader is None
-            or self.val_loader is None
-            or self.optimizer is None
-        ):
+        if self.train_loader is None or self.val_loader is None or self.optimizer is None:
             return
 
         best_val_loss = float("inf")
@@ -178,7 +176,8 @@ class Trainer:
         )
         patience_counter = 0
 
-        with self.mlflow.start_run():
+        run_context = self.mlflow.start_run() if self.use_mlflow else _NullRun()
+        with run_context:
             for epoch in range(epochs):
                 train_loss = self.train_epoch()
                 val_loss, metrics = self.validate()
@@ -190,21 +189,24 @@ class Trainer:
                 else:
                     patience_counter += 1
 
-                self.mlflow.log_metrics(
-                    {
-                        "epoch": epoch,
-                        "train_loss": train_loss,
-                        "val_loss": val_loss,
-                        "val_accuracy": metrics["accuracy"],
-                        "val_f1": metrics["f1"],
-                    }
-                )
+                if self.use_mlflow:
+                    self.mlflow.log_metrics(
+                        {
+                            "epoch": epoch,
+                            "train_loss": train_loss,
+                            "val_loss": val_loss,
+                            "val_accuracy": metrics["accuracy"],
+                            "val_f1": metrics["f1"],
+                        }
+                    )
 
                 if patience_counter >= patience:
                     break
 
             self.save_model("model_final.pth")
-            self.mlflow.log_model(self.model, "model")
+            if self.use_mlflow:
+                self.mlflow.log_model(self.model, "model")
+
             self.registry.register_model(
                 model_name="satellite-model",
                 version=1,
@@ -232,10 +234,18 @@ class Trainer:
             ),
             in_channels=int(model_cfg.get("in_channels", 3)),
             use_adapter=bool(model_cfg.get("use_adapter", False)),
-            adapter_out_channels=int(
-                model_cfg.get("adapter_out_channels", 64)
-            ),
+            adapter_out_channels=int(model_cfg.get("adapter_out_channels", 64)),
             config=self.config,
         )
 
         return model_path
+
+
+class _NullRun:
+    """No-op context manager used when MLflow is disabled."""
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        return False

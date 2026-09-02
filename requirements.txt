@@ -1,7 +1,7 @@
-# Core
+# Runtime dependencies are defined in pyproject.toml.
+# This file is kept as a pinned deployment reference.
 torch==2.4.1
 torchvision==0.19.1
-torchaudio==2.4.1
 timm==1.0.11
 
 # Geo & Data
@@ -12,7 +12,6 @@ pyproj==3.6.1
 numpy==1.26.4
 pandas==2.2.2
 pillow==10.4.0
-psycopg2-binary>=2.9,
 
 # ML & Utils
 scikit-learn==1.5.2
@@ -24,7 +23,7 @@ python-dotenv==1.0.1
 # API
 fastapi==0.115.0
 uvicorn[standard]==0.30.6
-python-multipart>=0.0.9
+python-multipart==0.0.9
 
 # GCP
 google-cloud-storage==2.18.2

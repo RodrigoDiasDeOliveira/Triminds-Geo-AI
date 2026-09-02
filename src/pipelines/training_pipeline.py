@@ -1,6 +1,7 @@
 # src/pipelines/training_pipeline.py
 from __future__ import annotations
 
+import argparse
 from collections.abc import Sized
 from typing import Any
 
@@ -45,6 +46,15 @@ def _build_loader(
     )
 
 
+def _validate_dataset(dataset: Dataset | Any, split: str) -> None:
+    """Fail early when a configured training split contains no samples."""
+    if isinstance(dataset, Sized) and len(dataset) == 0:
+        raise ValueError(
+            f"Dataset split '{split}' is empty. "
+            "Check the configured data directory and class folders."
+        )
+
+
 def run_training_pipeline(
     config_path: str = "config/config.yaml",
     epochs: int | None = None,
@@ -87,6 +97,9 @@ def run_training_pipeline(
         data_path=val_dir,
         transform=transform,
     )
+
+    _validate_dataset(train_dataset, "train")
+    _validate_dataset(val_dataset, "val")
 
     train_loader = _build_loader(train_dataset, batch_size, True)
     val_loader = _build_loader(val_dataset, batch_size, False)
@@ -135,4 +148,11 @@ def main(
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description="Run the Triminds Geo AI training pipeline.")
+    parser.add_argument(
+        "--config",
+        default="config/config.yaml",
+        help="Path to the YAML training configuration.",
+    )
+    args = parser.parse_args()
+    main(args.config)

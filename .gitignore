@@ -15,6 +15,20 @@ venv/
 *.env
 mlruns/
 
+# Python build / packaging artifacts
+*.egg-info/
+build/
+dist/
+
+# Test / temporary artifacts
+tests_backup_*/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Git / local metadata
+FETCH_HEAD
+
 # Notebooks outputs
 .ipynb_checkpoints/
 

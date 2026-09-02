@@ -10,25 +10,19 @@ project:
   random_seed: 42
   author: "Rodrigo Dias"
 
-# ==========================
-# Source Configuration (Nova - Central)
-# ==========================
 source:
-  type: "embedding"                    # opções: "embedding", "raster", "multispectral"
-  provider: "google_embedding"         # opções: "google_embedding", "sentinel2", "planet", etc.
+  type: "embedding"
+  provider: "google_embedding"
   config:
     bucket_name: "triminds-datasets"
     project_id: "${GCP_PROJECT_ID}"
 
-# ==========================
-# Data Configuration
-# ==========================
 data:
-  root_dir: "gs://triminds-datasets/embeddings"   # caminho dos tiles (local ou GCS)
-  year: 2023                                      # ano específico para embeddings anuais
+  root_dir: "gs://triminds-datasets/embeddings"
+  year: 2023
   patch_size: 256
   image_size: [224, 224]
-  channels: 64                                    # 64 para Google Satellite Embedding
+  channels: 64
   num_classes: 10
   normalize: true
   dataloader:
@@ -38,9 +32,6 @@ data:
     pin_memory: true
     drop_last: true
 
-# ==========================
-# Dataset Metadata
-# ==========================
 dataset:
   name: "GoogleSatelliteEmbeddingV1"
   classes:
@@ -58,22 +49,15 @@ dataset:
     normalize: true
     augmentation: true
 
-# ==========================
-# Model Configuration
-# ==========================
 model:
-  name: "resnet50"               # opções: resnet50, efficientnet, vit, swin, hybrid
-  backbone: "efficientnet_b0"
+  name: "resnet50"
   pretrained: true
-  use_adapter: true              # Ativa EmbeddingAdapter para 64 canais
+  use_adapter: true
   adapter_out_channels: 64
   in_channels: 64
   dropout: 0.3
   freeze_backbone: false
 
-# ==========================
-# Training Configuration
-# ==========================
 training:
   num_epochs: 50
   learning_rate: 0.0005
@@ -91,9 +75,6 @@ optimizer:
     name: "CosineAnnealingLR"
     T_max: 50
 
-# ==========================
-# Augmentation
-# ==========================
 augmentation:
   enabled: true
   rotation: 30
@@ -104,51 +85,36 @@ augmentation:
   saturation: 0.2
   random_crop: true
 
-# ==========================
-# Evaluation
-# ==========================
 evaluation:
   metrics: ["accuracy", "f1_score", "precision", "recall", "kappa"]
   confusion_matrix: true
   per_class_metrics: true
   top_k: 5
 
-# ==========================
-# Export / Ingestion
-# ==========================
 export:
   scale: 10
   max_pixels: 10000000000
-  region: [-46.8, -23.7, -46.5, -23.4]   # Exemplo: região de SP (ajuste conforme necessário)
+  region: [-46.8, -23.7, -46.5, -23.4]
 
-# ==========================
-# GCP & Cloud Configuration
-# ==========================
 gcp:
   project_id: "${GCP_PROJECT_ID}"
   region: "us-central1"
   bucket: "gs://triminds-datasets"
-  
+
 dataproc:
   cluster_name: "triminds-spark-cluster"
   num_workers: 4
-  
+
 vertex_ai:
   training_job_name: "triminds-training-job"
   machine_type: "n1-standard-8"
   accelerator: "NVIDIA_TESLA_T4"
 
-# ==========================
-# Vector Store (Futuro)
-# ==========================
 vectorstore:
-  type: "pgvector"                     # ou "qdrant", "milvus"
+  type: "pgvector"
   connection_string: "postgresql://user:password@localhost:5432/triminds"
   table_name: "geo_features"
 
-# ==========================
-# Paths & Logging
-# ==========================
 paths:
   models_dir: "models"
   experiments_dir: "experiments"
@@ -160,11 +126,8 @@ logging:
   level: "INFO"
   save_experiment: true
   use_mlflow: true
-  mlflow_tracking_uri: "http://localhost:5000"   # ou seu servidor MLflow
+  mlflow_tracking_uri: "http://localhost:5000"
 
-# ==========================
-# Experiment Tracking
-# ==========================
 experiment:
   name: "google-embedding-baseline"
   tags:
