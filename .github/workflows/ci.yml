@@ -1,6 +1,7 @@
 name: ML Pipeline CI
 
 on:
+  workflow_dispatch:
   push:
     branches: [main, develop]
   pull_request:
@@ -45,10 +46,86 @@ jobs:
           python -c "import rasterio; print(rasterio.__version__)"
 
       - name: Ruff Lint
-        run: ruff check src tests --output-format=github
+        run: ruff check src tests scripts --output-format=github
 
       - name: Ruff Format
-        run: ruff format src tests --check
+        run: ruff format src tests scripts --check
 
       - name: Run Tests
         run: pytest
+
+      - name: Validate local demo lifecycle
+        env:
+          CONFIG_PATH: config/demo.yaml
+          MODEL_PATH: artifacts/best_model.pth
+          MODEL_REQUIRED: "true"
+        run: |
+          bash scripts/train.sh
+          test -f artifacts/best_model.pth
+          python - <<'PY'
+          import os
+          from pathlib import Path
+
+          import torch
+          import yaml
+
+          from src.models.checkpoint import load_checkpoint
+          from src.models.model_factory import build_model
+
+          with open(os.environ["CONFIG_PATH"], encoding="utf-8") as handle:
+              cfg = yaml.safe_load(handle)
+          model_cfg = cfg["model"]
+          data_cfg = cfg["data"]
+          model = build_model(
+              model_cfg["name"],
+              num_classes=data_cfg["num_classes"],
+              pretrained=False,
+              in_channels=model_cfg.get("in_channels", 3),
+              use_adapter=model_cfg.get("use_adapter", False),
+              adapter_out_channels=model_cfg.get("adapter_out_channels", 64),
+          )
+          checkpoint = load_checkpoint(
+              Path(os.environ["MODEL_PATH"]),
+              model,
+              strict=True,
+              map_location="cpu",
+          )
+          assert checkpoint.get("model_name") == model_cfg["name"]
+          model.eval()
+          with torch.no_grad():
+              output = model(torch.randn(1, 3, 224, 224))
+          assert output.shape == (1, data_cfg["num_classes"])
+          print("Local demo lifecycle validated: dataset -> training -> checkpoint -> inference")
+          PY
+
+      - name: Validate API inference
+        env:
+          CONFIG_PATH: config/demo.yaml
+          MODEL_PATH: artifacts/best_model.pth
+          MODEL_REQUIRED: "true"
+        run: |
+          python -m uvicorn src.deployment.api.main:app --host 127.0.0.1 --port 8000 > /tmp/geoai-api.log 2>&1 &
+          API_PID=$!
+          trap 'kill $API_PID' EXIT
+          python - <<'PY'
+          import time
+          import urllib.request
+
+          for _ in range(30):
+              try:
+                  with urllib.request.urlopen("http://127.0.0.1:8000/health", timeout=2) as response:
+                      assert response.status == 200
+                      print(response.read().decode())
+                      break
+              except Exception:
+                  time.sleep(1)
+          else:
+              raise SystemExit("API did not become ready")
+          PY
+          python - <<'PY'
+          from PIL import Image
+          Image.new("RGB", (224, 224), (128, 128, 128)).save("/tmp/demo.png")
+          PY
+          curl --fail --silent --show-error \
+            -F "file=@/tmp/demo.png" \
+            http://127.0.0.1:8000/predict
