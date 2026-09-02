@@ -1,6 +1,7 @@
 # src/pipelines/training_pipeline.py
 from __future__ import annotations
 
+import argparse
 from collections.abc import Sized
 from typing import Any
 
@@ -135,4 +136,11 @@ def main(
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description="Run the Triminds Geo AI training pipeline.")
+    parser.add_argument(
+        "--config",
+        default="config/config.yaml",
+        help="Path to the YAML training configuration.",
+    )
+    args = parser.parse_args()
+    main(args.config)
