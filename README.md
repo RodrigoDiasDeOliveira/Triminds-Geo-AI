@@ -1,343 +1,133 @@
+# Triminds Geo AI
 
+A modular geospatial AI platform for satellite and Earth Observation workflows, built around PyTorch, geospatial processing, FastAPI, MLOps and Google Cloud integration.
 
-<img width="1536" height="1024" alt="satelite" src="https://github.com/user-attachments/assets/291af6bb-21c5-437b-ab41-734048ddb39f" />
+> **Current validation scope:** the repository contains a fully local RGB demo path from synthetic dataset generation through model training, checkpoint creation and FastAPI inference. Google Satellite Embedding, Earth Engine and cloud deployment capabilities are represented as configurable platform components and require their respective data, credentials and infrastructure to be enabled.
 
+## Local Demo — Quick Start
 
+The fastest way to validate the repository is the local demo.
 
+### 1. Install
 
-A production-grade **cloud-native machine learning platform** for satellite image classification focused on:
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -e ".[dev]"
+```
 
-- Land use classification
-- Precision agriculture
-- Geospatial intelligence
-- Scalable ML pipelines on Google Cloud
-  
+On Windows PowerShell:
 
-Built with PyTorch, MLOps practices, and GCP services (Vertex AI, Dataproc, BigQuery).
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+pip install -e ".[dev]"
+```
 
----
+### 2. Train the demo model
 
-Part of the Triminds Ecosystem
+```bash
+bash scripts/train.sh
+```
 
-Unlike traditional satellite image classification projects, Triminds adopts a feature-first architecture, where multiple geospatial data sources are transformed into standardized feature representations that can be consumed by machine learning models, vector databases, and enterprise analytics platforms.
+The script automatically creates a small deterministic **synthetic RGB dataset** when `data/demo/train` is missing. The dataset exists only to validate the software lifecycle; it is not a benchmark and does not represent real satellite imagery.
 
-The platform combines Deep Learning, Computer Vision, Foundation Models, MLOps, Google Earth Engine, and Google Cloud Platform into a modular ecosystem ready for production environments.
+Training produces a checkpoint under `artifacts/`.
 
-# 🚀 Project Goals
+To use another configuration:
 
-The long-term vision is to build an open and extensible ecosystem for enterprise Artificial Intelligence, where geospatial intelligence becomes a first-class component alongside conversational AI, computer vision, data platforms and cloud-native applications.
+```bash
+bash scripts/train.sh config/your-config.yaml
+```
 
----
+### 3. Start the API
 
-# 🧠 Core Capabilities
+```bash
+uvicorn src.deployment.api.main:app --host 0.0.0.0 --port 8000
+```
 
-Vision
+Then verify:
 
-Build an open, extensible and production-ready platform capable of transforming heterogeneous Earth Observation data into actionable geospatial intelligence.
+```bash
+curl http://localhost:8000/health
+curl http://localhost:8000/classes
+```
 
-Triminds Geo AI is designed to support:
+For inference, upload an image to `POST /predict`.
 
-🌱 Precision Agriculture
-🌍 Environmental Monitoring
-🛰️ Satellite Intelligence
-🏙️ Smart Cities
-🌳 Forestry Analysis
-🌊 Water Resources Monitoring
-🔥 Disaster Assessment
-📈 Spatial Analytics
-🤖 Foundation Models for Remote Sensing
-✨ Key Features
-🌎 Multi-Provider Earth Observation
+### 4. Docker
 
-Triminds was designed around the concept of Geo Providers, allowing different satellite and geospatial data sources to be integrated through a common interface.
+Build and run the API container after a checkpoint has been created:
 
-Current and planned providers include:
+```bash
+bash scripts/deploy.sh
+```
 
-Provider	Status
-Google Satellite Embedding V1 Annual	✅
-Sentinel-2	🚧
-Landsat	🚧
-Planet Labs	📋 Planned
-Maxar	📋 Planned
-Drone Imagery	📋 Planned
-LiDAR	📋 Planned
-🧠 Geo Feature Engine
+The container exposes port `8000` and includes a health check at `/health`.
 
-The GeoFeatureEngine is the core component of Triminds.
+### 5. Tests and quality checks
 
-Instead of coupling machine learning models directly to satellite imagery, the platform converts geospatial assets into reusable feature representations.
+```bash
+ruff check .
+ruff format --check .
+pytest
+pre-commit run --all-files
+```
 
+## Architecture
+
+Triminds is designed as a provider-based geospatial AI platform:
+
+```text
 Earth Observation Sources
         │
-        ├── Google Satellite Embedding
-        ├── Sentinel-2
-        ├── Landsat
-        ├── Drone
-        └── Future Providers
-                │
-                ▼
-         Geo Provider Layer
-                │
-                ▼
-      Geo Ingestion Pipeline
-                │
-                ▼
-        Geo Feature Engine
-                │
-                ▼
-      Standard Feature Objects
-                │
-      ┌─────────┴──────────┐
-      ▼                    ▼
-Vector Store         Deep Learning
-(pgvector/Qdrant)    CNN / ViT / Hybrid
-
-This abstraction allows the same AI pipeline to consume different Earth Observation datasets without changing the downstream machine learning workflow.
-
-🏗 Platform Architecture
-DATA SOURCES
-│
-├── Google Earth Engine
-├── Google Satellite Embeddings
-├── Sentinel
-├── Landsat
-├── Drone Imagery
-└── Future Providers
-
-        │
-
-PROVIDER LAYER
-│
-├── GoogleEmbeddingProvider
-├── SentinelProvider
-├── LandsatProvider
-
-        │
-
-INGESTION LAYER
-│
-├── Export Manager
-├── Metadata
-├── Validation
-├── Dataset Builders
-
-        │
-
-FEATURE LAYER
-│
-├── GeoFeatureEngine
-├── Feature Extractors
-├── Feature Adapters
-└── Metadata Engine
-
-        │
-
-VECTOR LAYER
-│
-├── pgvector
-├── Qdrant
-├── Vertex AI Vector Search (future)
-
-        │
-
-MODEL LAYER
-│
-├── CNN
-├── Vision Transformer
-├── Swin Transformer
-├── Hybrid Models
-
-        │
-
-MLOPS
-│
-├── MLflow
-├── Model Registry
-├── Experiment Tracking
-├── Drift Monitoring
-
-        │
-
-DEPLOYMENT
-│
-├── FastAPI
-├── Vertex AI
-├── Docker
-└── Kubernetes (future)
-🤖 AI Models
-
-Triminds currently supports multiple Deep Learning architectures.
-
-CNN
-ResNet
-EfficientNet
-Vision Transformers
-Vision Transformer (ViT)
-Swin Transformer
-Hybrid Models
-CNN + Transformer
-
-The architecture also includes an Embedding Adapter, enabling foundation-model embeddings (64-band tensors) to be consumed by traditional CNN backbones.
-
-🌍 Geospatial Capabilities
-Google Earth Engine integration
-Google Satellite Embedding support
-GeoTIFF processing
-Cloud Optimized GeoTIFF (COG)
-Raster preprocessing
-Coordinate transformations
-Multi-spectral support
-Embedding-based workflows
-Metadata generation
-Extensible provider architecture
-⚙️ MLOps Platform
-
-Triminds includes a complete MLOps stack.
-
-Experiment Management
-MLflow Tracking
-Experiment Registry
-Artifact Management
-Model Lifecycle
-Model Registry
-Versioning
-Deployment
-Monitoring
-Data Drift
-Model Drift
-Performance Monitoring
-☁️ Google Cloud Integration
-
-Native support for Google Cloud services.
-
-Vertex AI
-Dataproc
-Cloud Storage
-BigQuery GIS
-Google Earth Engine
-Terraform Infrastructure
-🔄 End-to-End Workflow
-Earth Observation Data
+        ▼
+   Provider Layer
         │
         ▼
-Geo Provider
+   Ingestion / Validation
         │
         ▼
-Geo Ingestion
+ Geo Feature / Representation Layer
+        │
+        ├───────────────┐
+        ▼               ▼
+ Deep Learning      Vector / Search
         │
         ▼
-Geo Feature Engine
+     FastAPI
         │
         ▼
-Feature Extraction
-        │
-        ▼
-Vector Store
-        │
-        ▼
-Deep Learning Models
-        │
-        ▼
-MLflow Tracking
-        │
-        ▼
-Model Registry
-        │
-        ▼
-Vertex AI Deployment
-        │
-        ▼
-Monitoring & Retraining
-🌐 REST API
+ Cloud Deployment
+```
 
-FastAPI-based inference service.
+The long-term architecture supports Google Satellite Embeddings, Google Earth Engine, Sentinel-2, Landsat and other providers. Optional cloud components include Cloud Storage, Vertex AI, Dataproc, BigQuery and Terraform-managed infrastructure.
 
-POST /predict
+## Model Layer
 
-Upload a GeoTIFF or supported image asset and receive AI predictions.
+The model factory supports multiple architectures, including ResNet, EfficientNet, Vision Transformers and hybrid configurations. An embedding adapter is available for workflows using 64-channel foundation-model representations.
 
-🧪 Testing Strategy
+The **local demo deliberately uses RGB (3-channel) ResNet50**. It is separate from the Google Satellite Embedding configuration and should not be interpreted as validation of the 64-channel embedding pipeline.
 
-The project follows a multi-layer testing strategy.
+## MLOps
 
-Unit Tests
-Models
-Features
-Metrics
-Data Loading
-Geospatial Utilities
-Integration Tests
-Training Pipeline
-Ingestion Pipeline
-Vertex AI
-Google Cloud Components
-FastAPI
-Performance Tests
-Inference Latency
-Memory Usage
-Throughput
-Scalability
-🐳 Deployment
+MLflow and the local model registry are available as optional components. The local demo can run without MLflow, while cloud-oriented configurations can enable the relevant tracking and artifact services.
 
-Supported deployment targets include:
+## Cloud / GCP
 
-Docker
-Google Vertex AI
-Cloud Run
-Kubernetes (planned)
-📊 Roadmap
-Geo AI
-Multi-temporal embeddings
-Foundation Models
-Self-supervised learning
-Semantic segmentation
-Multi-modal AI
-Geospatial
-Sentinel-2
-Landsat
-Planet Labs
-Maxar
-Drone imagery
-LiDAR
-Vector Intelligence
-pgvector
-Qdrant
-Vertex AI Vector Search
-Semantic Search
-Cloud
-Kubernetes
-Event-driven ingestion
-Streaming pipelines
-Distributed training
-🧩 Design Principles
+The project includes configuration and infrastructure components for Google Cloud workflows. These are environment-dependent and require project configuration, authentication, permissions, datasets and cloud resources before they can be considered operational.
 
-Triminds follows modern software engineering practices.
+## Project Status
 
-Modular Architecture
-Cloud Native Design
-AI-First Development
-Feature-First Architecture
-Provider-Based Extensibility
-Separation of Concerns
-Infrastructure as Code
-Reproducibility
-Enterprise MLOps
-Production-Ready Components
-📈 Project Status
+**Active development / production-readiness audit.**
 
-🟢 Active Development
+The repository is intentionally separating:
 
-Current focus:
+- **Validated:** local demo lifecycle and API inference path.
+- **Implemented components:** model, data, geospatial, MLOps and deployment modules.
+- **Cloud-dependent:** Earth Engine, Google Satellite Embeddings and GCP deployment workflows.
+- **Planned:** additional providers, vector search expansion and Kubernetes/event-driven capabilities.
 
-Google Satellite Embedding integration
-Geo Feature Engine
-Multi-provider architecture
-Enterprise MLOps
-Production-ready geospatial pipelines
-
-
-
-
-📜 License
+## License
 
 MIT License
