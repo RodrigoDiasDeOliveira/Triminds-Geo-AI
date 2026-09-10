@@ -48,14 +48,10 @@ MODEL_REQUIRED = (
 MODEL_NAME = os.environ.get("MODEL_NAME", MODEL_CFG.get("name", "resnet50"))
 NUM_CLASSES = int(os.environ.get("NUM_CLASSES", DATA_CFG.get("num_classes", 10)))
 IN_CHANNELS = int(os.environ.get("IN_CHANNELS", MODEL_CFG.get("in_channels", 3)))
-USE_ADAPTER_ENV = os.environ.get(
-    "USE_ADAPTER", str(MODEL_CFG.get("use_adapter", False))
-)
+USE_ADAPTER_ENV = os.environ.get("USE_ADAPTER", str(MODEL_CFG.get("use_adapter", False)))
 USE_ADAPTER = USE_ADAPTER_ENV.lower() == "true"
 ADAPTER_OUT = int(MODEL_CFG.get("adapter_out_channels", 64))
-CLASS_NAMES: list[str] = DATASET_CFG.get("classes", []) or [
-    str(i) for i in range(NUM_CLASSES)
-]
+CLASS_NAMES: list[str] = DATASET_CFG.get("classes", []) or [str(i) for i in range(NUM_CLASSES)]
 
 ALLOWED_ORIGINS = [
     o.strip()
@@ -163,9 +159,7 @@ async def predict(file: UploadFile = File(...)):
         pred_idx = int(torch.argmax(probs).item())
         confidence = float(probs[pred_idx].item())
 
-    class_name = (
-        CLASS_NAMES[pred_idx] if pred_idx < len(CLASS_NAMES) else str(pred_idx)
-    )
+    class_name = CLASS_NAMES[pred_idx] if pred_idx < len(CLASS_NAMES) else str(pred_idx)
     return {
         "prediction": pred_idx,
         "class_name": class_name,
