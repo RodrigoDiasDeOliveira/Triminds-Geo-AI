@@ -40,6 +40,9 @@ dependencies = [
     "uvicorn[standard]>=0.30",
     "python-multipart>=0.0.9",
 
+    # Vector store
+    "psycopg2-binary>=2.9,<3",
+
     # MLOps
     "mlflow>=2.16",
 
