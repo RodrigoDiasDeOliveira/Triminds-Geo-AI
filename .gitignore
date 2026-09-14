@@ -29,8 +29,7 @@ htmlcov/
 # Git / local metadata
 FETCH_HEAD
 
-# Notebooks outputs
+# Notebook outputs
 .ipynb_checkpoints/
 
 config/gcp.yaml
-*.env
