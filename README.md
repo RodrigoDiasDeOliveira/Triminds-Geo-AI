@@ -1,12 +1,96 @@
 # Triminds Geo AI
 
-A modular geospatial AI platform for satellite and Earth Observation workflows, built around PyTorch, geospatial processing, FastAPI, MLOps and Google Cloud integration.
+## Geospatial AI Platform for Earth Observation
 
-> **Current validation scope:** the repository contains a fully local RGB demo path from synthetic dataset generation through model training, checkpoint creation and FastAPI inference. Google Satellite Embedding, Earth Engine and cloud deployment capabilities are represented as configurable platform components and require their respective data, credentials and infrastructure to be enabled.
+**Triminds Geo AI** is a modular geospatial AI platform for satellite and Earth Observation workflows, combining machine learning, geospatial processing, FastAPI and cloud-native deployment.
 
-## Local Demo — Quick Start
+The platform is designed around a provider-oriented architecture so that geospatial data sources, representation models, inference components and deployment environments can evolve independently.
 
-The fastest way to validate the repository is the local demo.
+---
+
+## Operational Deployment
+
+The current platform is deployed and online on **Google Cloud Run**.
+
+| Property | Current state |
+|---|---|
+| Platform | Google Cloud Run |
+| Region | `europe-west1` |
+| Deployment | Cloud Run |
+| Version | `v4` |
+| Status | Online / operational |
+
+**Live service:**
+
+[Triminds Geo AI — Cloud Run v4](https://triminds-geo-ai-v4-1091629879450.europe-west1.run.app/)
+
+The Cloud Run deployment represents the current operational instance of the platform.
+
+---
+
+## Architecture
+
+The platform follows a provider-based geospatial AI architecture:
+
+```text
+Earth Observation Sources
+        │
+        ▼
+   Provider Layer
+        │
+        ▼
+Ingestion / Validation
+        │
+        ▼
+Geospatial Representation
+        │
+        ├───────────────┐
+        ▼               ▼
+ Deep Learning      Vector / Search
+        │               │
+        └───────┬───────┘
+                ▼
+             FastAPI
+                │
+                ▼
+          Cloud Run
+                │
+                ▼
+       Operational Service
+```
+
+The architecture is intended to support multiple Earth Observation providers and representation strategies without coupling the application to a single data source.
+
+---
+
+## Current Deployment vs. Local Validation
+
+The repository contains two complementary execution paths.
+
+### Operational Cloud Deployment
+
+The current production-oriented deployment runs on Google Cloud Run as version **v4**.
+
+This is the environment used to expose the platform as an online service.
+
+### Local Demo
+
+The repository also maintains a deterministic local demonstration path for development and reproducibility.
+
+The local path uses:
+
+- synthetic RGB data
+- PyTorch
+- ResNet50
+- local model training
+- checkpoint generation
+- FastAPI inference
+
+The synthetic dataset is intentionally a software-validation mechanism. It should not be interpreted as a benchmark or as real satellite imagery.
+
+---
+
+## Local Quick Start
 
 ### 1. Install
 
@@ -16,7 +100,7 @@ source .venv/bin/activate
 pip install -e ".[dev]"
 ```
 
-On Windows PowerShell:
+Windows PowerShell:
 
 ```powershell
 python -m venv .venv
@@ -30,51 +114,175 @@ pip install -e ".[dev]"
 bash scripts/train.sh
 ```
 
-The script automatically creates a small deterministic **synthetic RGB dataset** when `data/demo/train` is missing. The dataset exists only to validate the software lifecycle; it is not a benchmark and does not represent real satellite imagery.
+The training script creates a small deterministic synthetic RGB dataset when the demo data is unavailable.
 
-Training produces a checkpoint under `artifacts/`.
+Training produces a checkpoint under:
 
-To use another configuration:
-
-```bash
-bash scripts/train.sh config/your-config.yaml
+```text
+artifacts/
 ```
 
-### 3. Start the API
-
-The demo checkpoint was trained with `config/demo.yaml`, so the API must use the same configuration:
+### 3. Start the local API
 
 ```bash
 CONFIG_PATH=config/demo.yaml uvicorn src.deployment.api.main:app --host 0.0.0.0 --port 8000
 ```
 
-On Windows PowerShell:
+Windows PowerShell:
 
 ```powershell
 $env:CONFIG_PATH="config/demo.yaml"
 uvicorn src.deployment.api.main:app --host 0.0.0.0 --port 8000
 ```
 
-Then verify:
+Verify:
 
 ```bash
 curl http://localhost:8000/health
 curl http://localhost:8000/classes
 ```
 
-For inference, upload an image to `POST /predict`.
+Inference:
 
-### 4. Docker
+```text
+POST /predict
+```
 
-Build and run the API container after a checkpoint has been created:
+---
+
+## Containerization
+
+The API can also be executed as a container.
 
 ```bash
 bash scripts/deploy.sh
 ```
 
-The container exposes port `8000` and includes a health check at `/health`.
+The container exposes port `8000` and provides a health-check endpoint.
 
-### 5. Tests and quality checks
+---
+
+## Model Layer
+
+The model factory supports multiple architectures, including:
+
+- ResNet
+- EfficientNet
+- Vision Transformers
+- hybrid configurations
+
+An embedding adapter is available for workflows based on higher-dimensional foundation-model representations.
+
+The local demonstration deliberately uses:
+
+```text
+RGB → ResNet50
+```
+
+This local path is independent from specialized satellite-embedding configurations.
+
+---
+
+## Earth Observation Direction
+
+The architecture is designed to accommodate Earth Observation sources and representation systems such as:
+
+- Google Satellite Embeddings
+- Google Earth Engine
+- Sentinel-2
+- Landsat
+- additional providers
+
+The objective is to maintain a modular boundary between data acquisition, representation, machine learning and inference.
+
+---
+
+## MLOps
+
+The repository includes MLOps-oriented components such as:
+
+- MLflow integration
+- local model registry
+- model artifacts
+- configurable training pipelines
+
+These components can be enabled according to the deployment environment.
+
+---
+
+## Google Cloud
+
+Google Cloud is now part of the **operational deployment path**, not only a future integration target.
+
+The current online deployment runs on:
+
+```text
+Google Cloud
+      │
+      ▼
+Cloud Run
+      │
+      ▼
+Triminds Geo AI v4
+      │
+      ▼
+Online Service
+```
+
+Additional Google Cloud services can be introduced according to the requirements of specific geospatial workloads.
+
+---
+
+## Engineering and Operational Status
+
+The project should be understood through separate validation levels:
+
+| Area | Status |
+|---|---|
+| Local deterministic demo | Validated |
+| FastAPI inference path | Validated |
+| Container execution | Validated |
+| Google Cloud integration | Implemented |
+| Cloud Run deployment | **Operational — v4** |
+| Online service | **Available** |
+| Additional Earth Observation providers | Evolutionary |
+| Advanced geospatial workloads | Under continuous development |
+
+The important distinction is that **Cloud Run v4 is an actual operational deployment**, while the platform itself continues to evolve toward broader operational maturity.
+
+---
+
+## Production Readiness
+
+Triminds Geo AI follows the Triminds engineering principle of separating implementation from operational evidence.
+
+A component may exist in the codebase without being considered operational.
+
+Conversely, the Cloud Run v4 deployment provides concrete evidence that the platform can be deployed and exposed as an online service.
+
+The maturity model is therefore:
+
+```text
+Implemented
+    │
+    ▼
+Validated
+    │
+    ▼
+Deployed
+    │
+    ▼
+Operational
+    │
+    ▼
+Operationally Mature
+```
+
+The current Geo AI platform has reached the **Operational** stage through its Cloud Run v4 deployment, while the platform itself continues to evolve toward broader operational maturity.
+
+---
+
+## Quality Checks
 
 ```bash
 ruff check .
@@ -83,59 +291,7 @@ pytest
 pre-commit run --all-files
 ```
 
-## Architecture
-
-Triminds is designed as a provider-based geospatial AI platform:
-
-```text
-Earth Observation Sources
-        │
-        ▼
-   Provider Layer
-        │
-        ▼
-   Ingestion / Validation
-        │
-        ▼
- Geo Feature / Representation Layer
-        │
-        ├───────────────┐
-        ▼               ▼
- Deep Learning      Vector / Search
-        │
-        ▼
-     FastAPI
-        │
-        ▼
- Cloud Deployment
-```
-
-The long-term architecture supports Google Satellite Embeddings, Google Earth Engine, Sentinel-2, Landsat and other providers. Optional cloud components include Cloud Storage, Vertex AI, Dataproc, BigQuery and Terraform-managed infrastructure.
-
-## Model Layer
-
-The model factory supports multiple architectures, including ResNet, EfficientNet, Vision Transformers and hybrid configurations. An embedding adapter is available for workflows using 64-channel foundation-model representations.
-
-The **local demo deliberately uses RGB (3-channel) ResNet50**. It is separate from the Google Satellite Embedding configuration and should not be interpreted as validation of the 64-channel embedding pipeline.
-
-## MLOps
-
-MLflow and the local model registry are available as optional components. The local demo can run without MLflow, while cloud-oriented configurations can enable the relevant tracking and artifact services.
-
-## Cloud / GCP
-
-The project includes configuration and infrastructure components for Google Cloud workflows. These are environment-dependent and require project configuration, authentication, permissions, datasets and cloud resources before they can be considered operational.
-
-## Project Status
-
-**Active development / production-readiness audit.**
-
-The repository is intentionally separating:
-
-- **Validated:** local demo lifecycle and API inference path.
-- **Implemented components:** model, data, geospatial, MLOps and deployment modules.
-- **Cloud-dependent:** Earth Engine, Google Satellite Embeddings and GCP deployment workflows.
-- **Planned:** additional providers, vector search expansion and Kubernetes/event-driven capabilities.
+---
 
 ## License
 
